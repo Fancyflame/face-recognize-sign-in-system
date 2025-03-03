@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "allowUmdGlobalAccess": true,
+        "jsx": "react",
+        // "module": "esnext",
+        // "target": "esnext"
+    },
+}
