@@ -1,8 +1,12 @@
 {
     "compilerOptions": {
         "allowUmdGlobalAccess": true,
-        "jsx": "react",
+        "jsx": "react-jsx",
+        "lib": ["ESNext", "DOM"],
+        "strict": true,
+        "strictNullChecks": true,
         // "module": "esnext",
         // "target": "esnext"
-    },
+    }//,
+    //"include": ["src/global.d.ts"]
 }
