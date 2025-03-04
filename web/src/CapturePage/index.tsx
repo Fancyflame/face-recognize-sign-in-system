@@ -1,15 +1,33 @@
 import * as faceapi from "face-api.js";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "./index.module.less";
+import { FrameExtractor } from "./frameExtraction";
 
 export default function CapturePage() {
-    const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
+    const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
     const [recording, setRecording] = useState(false);
-    useCamera(videoRef);
+    useCamera(videoEl);
+
+    const frameExtractor = useMemo(() => {
+        if (!videoEl) {
+            return;
+        }
+        return new FrameExtractor(videoEl, (img) => {
+            console.log(img);
+        });
+    }, [videoEl]);
+
+    useEffect(() => {
+        runFaceApi("./models");
+    }, []);
 
     return (
         <div className={styles.container}>
-            <video className={styles.camera} ref={setVideoRef}></video>
+            <video
+                className={styles.camera}
+                ref={setVideoEl}
+                onCanPlay={() => frameExtractor?.start(1000)}
+            ></video>
             <div className={styles.overlay}>
                 <div className={styles.students}></div>
                 <button
@@ -21,11 +39,6 @@ export default function CapturePage() {
             </div>
         </div>
     );
-}
-
-async function runFaceApi(pathDir: string) {
-    await faceapi.loadMtcnnModel(pathDir);
-    await faceapi.loadFaceDetectionModel(pathDir);
 }
 
 async function useCamera(videoRef: HTMLVideoElement | null) {
@@ -63,4 +76,10 @@ async function useCamera(videoRef: HTMLVideoElement | null) {
             return closeCam.bind(null, videoRef);
         }
     }, [videoRef]);
+}
+
+async function runFaceApi(pathDir: string) {
+    await faceapi.loadMtcnnModel(pathDir);
+    await faceapi.loadFaceDetectionModel(pathDir);
+    console.log("模型已加载");
 }
