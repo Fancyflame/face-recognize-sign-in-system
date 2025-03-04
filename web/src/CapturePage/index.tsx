@@ -1,21 +1,60 @@
 import * as faceapi from "face-api.js";
-import { useEffect, useMemo, useState } from "react";
+import { CSSProperties, useEffect, useMemo, useState } from "react";
 import styles from "./index.module.less";
 import { FrameExtractor } from "./frameExtraction";
+import { FaceDetection } from "face-api.js";
 
 export default function CapturePage() {
     const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
     const [recording, setRecording] = useState(false);
+    const [detections, setDetections] = useState<faceapi.FaceDetection[]>([]);
     useCamera(videoEl);
 
-    const frameExtractor = useMemo(() => {
-        if (!videoEl) {
+    useEffect(() => {
+        if (!recording) {
             return;
         }
-        return new FrameExtractor(videoEl, (img) => {
-            console.log(img);
+
+        const task = async () => {
+            const detections = await faceapi.detectAllFaces(
+                videoEl!,
+                new faceapi.SsdMobilenetv1Options()
+            );
+            setDetections(detections);
+            console.log(detections);
+        };
+
+        const id = setInterval(task, 500);
+        return () => {
+            clearInterval(id);
+            //setDetections([]);
+        };
+    }, [recording]);
+
+    const boxes = useMemo(() => {
+        if (!videoEl) {
+            return [];
+        }
+
+        const videoWidth = videoEl.clientWidth;
+        const videoHeight = videoEl.clientHeight;
+        return detections.map((det) => {
+            const { x, y, width, height } = det.relativeBox;
+            return (
+                <div
+                    style={{
+                        position: "fixed",
+                        left: x * videoWidth,
+                        top: y * videoHeight,
+                        width: width * videoWidth,
+                        height: height * videoHeight,
+                        border: "3px solid #54fe9b",
+                        borderRadius: 5,
+                    }}
+                ></div>
+            );
         });
-    }, [videoEl]);
+    }, [detections]);
 
     useEffect(() => {
         runFaceApi("./models");
@@ -23,11 +62,8 @@ export default function CapturePage() {
 
     return (
         <div className={styles.container}>
-            <video
-                className={styles.camera}
-                ref={setVideoEl}
-                onCanPlay={() => frameExtractor?.start(1000)}
-            ></video>
+            <video className={styles.camera} ref={setVideoEl}></video>
+            <div>{boxes}</div>
             <div className={styles.overlay}>
                 <div className={styles.students}></div>
                 <button
@@ -79,7 +115,8 @@ async function useCamera(videoRef: HTMLVideoElement | null) {
 }
 
 async function runFaceApi(pathDir: string) {
-    await faceapi.loadMtcnnModel(pathDir);
+    // await faceapi.loadMtcnnModel(pathDir);
+    await faceapi.loadSsdMobilenetv1Model(pathDir);
     await faceapi.loadFaceDetectionModel(pathDir);
     console.log("模型已加载");
 }
