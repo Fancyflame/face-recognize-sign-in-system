@@ -7,10 +7,14 @@ import {
     runModel,
 } from "./faceRecognition";
 
+type ModelLoadState = "loading" | "ok" | "error";
+
 export default function CapturePage() {
     const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
     const [recording, setRecording] = useState(false);
     const [detections, setDetections] = useState<DetectionResults>([]);
+    const [modelLoadState, setModelLoadState] =
+        useState<ModelLoadState>("loading");
 
     if (!recording && detections.length) {
         setDetections([]);
@@ -18,7 +22,13 @@ export default function CapturePage() {
 
     useCamera(videoEl);
     useEffect(() => {
-        loadModel("./models");
+        loadModel("./models")
+            .then(() => {
+                setModelLoadState("ok");
+            })
+            .catch(() => {
+                setModelLoadState("error");
+            });
     }, []);
 
     useEffect(() => {
@@ -43,6 +53,16 @@ export default function CapturePage() {
         return videoEl ? faceDetectionsToDivs(videoEl, detections) : [];
     }, [detections]);
 
+    const recordButtonClass = useMemo(() => {
+        if (recording) {
+            return styles.recording;
+        } else if (modelLoadState !== "ok") {
+            return styles.inLoading;
+        } else {
+            return "";
+        }
+    }, [recording, modelLoadState]);
+
     return (
         <div className={styles.container}>
             <video className={styles.camera} ref={setVideoEl}></video>
@@ -50,10 +70,9 @@ export default function CapturePage() {
             <div className={styles.overlay}>
                 <div className={styles.students}></div>
                 <button
+                    disabled={modelLoadState !== "ok"}
                     onClick={() => setRecording(!recording)}
-                    className={`${styles.startBtn} ${
-                        recording ? styles.recording : ""
-                    }`}
+                    className={`${styles.startBtn} ${recordButtonClass}`}
                 ></button>
             </div>
         </div>
