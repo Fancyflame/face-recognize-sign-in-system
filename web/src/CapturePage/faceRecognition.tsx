@@ -21,9 +21,7 @@ export async function runModel(video: HTMLVideoElement) {
 
 const COLOR_RECOGNIZED = "#54fe9b";
 const COLOR_UNRECOGNIZED = "#e84118";
-const FACE_MATCHER = new faceapi.FaceMatcher(
-    new Float32Array(testDescriptors.ME),
-);
+const FACE_MATCHER = new faceapi.FaceMatcher(testDescriptors.ME);
 
 export function faceDetectionsToDivs(
     video: HTMLVideoElement,
@@ -34,7 +32,7 @@ export function faceDetectionsToDivs(
     return detections.map((det, index) => {
         const { x, y, width, height } = det.alignedRect.relativeBox;
         const matches =
-            FACE_MATCHER.findBestMatch(det.descriptor).distance < 0.4;
+            FACE_MATCHER.findBestMatch(det.descriptor).distance < 0.5;
 
         return (
             <div
