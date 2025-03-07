@@ -1,0 +1,33 @@
+syntax = "proto3";
+package remote_signin;
+
+service Classroom {
+    rpc Query(ClassroomReq) returns (ClassroomRes);
+}
+
+message ClassroomReq {
+    string classroom_id = 1;
+}
+
+message ClassroomRes {
+    oneof response {
+        Data ok = 1;
+        Error err = 2;
+    }
+
+    message Data {
+        string classroom_id = 1;
+        string name = 2;
+        repeated Student students = 3;
+    }
+}
+
+message Student {
+    string id = 1;
+    string name = 2;
+    repeated float face_descriptor = 3;
+}
+
+message Error {
+    string err_msg = 1;
+}
