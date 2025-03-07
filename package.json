@@ -1,0 +1,13 @@
+{
+  "name": "sign-in-sys-project",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "web": "cd web && pnpm dev",
+    "server": "cd backend && cargo r"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.5.2"
+}
