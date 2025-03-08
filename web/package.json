@@ -6,11 +6,13 @@
   "scripts": {
     "build": "rsbuild build",
     "dev": "rsbuild dev --open",
-    "preview": "rsbuild preview"
+    "preview": "rsbuild preview",
+    "rpc": "node scripts/run.js scripts/rpc.sh"
   },
   "dependencies": {
     "@rsbuild/plugin-node-polyfill": "^1.3.0",
     "face-api.js": "^0.22.2",
+    "grpc-web": "^1.5.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.2.0"
@@ -22,6 +24,12 @@
     "@types/less": "^3.0.8",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "protoc-gen-js": "3.21.4-4",
     "typescript-plugin-css-modules": "^5.1.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "protoc-gen-js"
+    ]
   }
 }

@@ -14,6 +14,9 @@ importers:
       face-api.js:
         specifier: ^0.22.2
         version: 0.22.2
+      grpc-web:
+        specifier: ^1.5.0
+        version: 1.5.0
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -42,6 +45,9 @@ importers:
       '@types/react-dom':
         specifier: ^19.0.4
         version: 19.0.4(@types/react@19.0.10)
+      protoc-gen-js:
+        specifier: 3.21.4-4
+        version: 3.21.4-4
       typescript-plugin-css-modules:
         specifier: ^5.1.0
         version: 5.1.0(typescript@5.8.2)
@@ -286,6 +292,10 @@ packages:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
     engines: {node: '>=6.5'}
 
+  adm-zip@0.5.10:
+    resolution: {integrity: sha512-x0HvcHqVJNTPk/Bw8JbLWlWoo6Wwnsug0fnYYro1HBrjxZ3G7/AZk7Ahv8JwDe1uIcz8eBqvu86FuF1POiG7vQ==}
+    engines: {node: '>=6.0'}
+
   asn1.js@4.10.1:
     resolution: {integrity: sha512-p32cOF5q0Zqs9uBiONKYLm6BClCoBCM5O9JfeUSlnQLBTxYdTK+pW+nXflm8UkKd2UYlEbYz5qEi0JuZR9ckSw==}
 
@@ -528,6 +538,9 @@ packages:
 
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
+
+  grpc-web@1.5.0:
+    resolution: {integrity: sha512-y1tS3BBIoiVSzKTDF3Hm7E8hV2n7YY7pO0Uo7depfWJqKzWE+SKr0jvHNIJsJJYILQlpYShpi/DRJJMbosgDMQ==}
 
   has-property-descriptors@1.0.2:
     resolution: {integrity: sha512-55JNKuIW+vq4Ke1BjOTjM2YctQIvCT7GFzHwmfZPGo5wnrgkid0YQtnAleFSqumZm4az3n2BS+erby5ipJdgrg==}
@@ -817,6 +830,10 @@ packages:
   process@0.11.10:
     resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
     engines: {node: '>= 0.6.0'}
+
+  protoc-gen-js@3.21.4-4:
+    resolution: {integrity: sha512-BQUNVNm55pCiFl386SbAjM4D/S70N1jyZPKuTsb8RVibtn+FoiOdHlw4wG8DssvMRZTdI+DIL/WZYN3QBChurg==}
+    hasBin: true
 
   prr@1.0.1:
     resolution: {integrity: sha512-yPw4Sng1gWghHQWj0B3ZggWUm4qVbPwPFcRG8KyxiU7J2OHFSoEHKS+EZ3fv5l1t9CyCiop6l/ZYeWbrgoQejw==}
@@ -1298,6 +1315,8 @@ snapshots:
     dependencies:
       event-target-shim: 5.0.1
 
+  adm-zip@0.5.10: {}
+
   asn1.js@4.10.1:
     dependencies:
       bn.js: 4.12.1
@@ -1608,6 +1627,8 @@ snapshots:
   graceful-fs@4.2.11:
     optional: true
 
+  grpc-web@1.5.0: {}
+
   has-property-descriptors@1.0.2:
     dependencies:
       es-define-property: 1.0.1
@@ -1885,6 +1906,10 @@ snapshots:
   process-nextick-args@2.0.1: {}
 
   process@0.11.10: {}
+
+  protoc-gen-js@3.21.4-4:
+    dependencies:
+      adm-zip: 0.5.10
 
   prr@1.0.1:
     optional: true
