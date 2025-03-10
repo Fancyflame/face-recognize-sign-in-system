@@ -4,7 +4,7 @@ import { ClassroomClient } from "../../generated/Remote_signinServiceClientPb";
 import { ClassroomReq, Student } from "../../generated/remote_signin_pb";
 
 const THRESHOLD = 0.5;
-const REMOTE_DB_ADDR = "localhost:10000";
+const REMOTE_DB_ADDR = "http://localhost:10000";
 
 export interface FaceDescDb {
     matchFace(desciptor: Float32Array): Student | undefined;

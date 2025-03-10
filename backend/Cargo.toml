@@ -5,8 +5,12 @@ edition = "2024"
 
 [dependencies]
 tonic = "0.12"
+tonic-web = "0.12"
 prost = "0.13"
 tokio = { version = "1.37", features = ["macros", "rt-multi-thread"] }
+anyhow = "1.0"
+tower = "*"                                                            # 不知道版本，只要和tonic匹配就行
+tower-http = "*"
 
 [build-dependencies]
 tonic-build = "*"
