@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import styles from "./index.module.less";
 import {
     DetectionResults,
-    faceDetectionsToDivs,
+    FaceDetectionsBox,
     loadModel,
     runModel,
 } from "./faceRecognition";
@@ -50,7 +50,9 @@ export default function CapturePage() {
     }, [recording]);
 
     const boxes = useMemo(() => {
-        return videoEl ? faceDetectionsToDivs(videoEl, detections) : [];
+        return videoEl ? (
+            <FaceDetectionsBox video={videoEl} detections={detections} />
+        ) : null;
     }, [detections]);
 
     const recordButtonClass = useMemo(() => {

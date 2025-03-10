@@ -1,5 +1,6 @@
 import * as faceapi from "face-api.js";
 import * as testDescriptors from "./testDescriptors";
+import { useFaceDescDb } from "./faceDescriptorDb";
 
 export type DetectionResults = Awaited<ReturnType<typeof runModel>>;
 
@@ -21,18 +22,20 @@ export async function runModel(video: HTMLVideoElement) {
 
 const COLOR_RECOGNIZED = "#54fe9b";
 const COLOR_UNRECOGNIZED = "#e84118";
-const FACE_MATCHER = new faceapi.FaceMatcher(testDescriptors.ME);
 
-export function faceDetectionsToDivs(
-    video: HTMLVideoElement,
-    detections: DetectionResults,
-) {
+export interface FaceDetectionsBoxProps {
+    video: HTMLVideoElement;
+    detections: DetectionResults;
+}
+
+export function FaceDetectionsBox(props: FaceDetectionsBoxProps) {
+    const { video, detections } = props;
+    const db = useFaceDescDb("test");
     const videoBox = getVideoDisplayRect(video);
 
     return detections.map((det, index) => {
         const { x, y, width, height } = det.alignedRect.relativeBox;
-        const matches =
-            FACE_MATCHER.findBestMatch(det.descriptor).distance < 0.5;
+        const matches = !!db.matchFace(det.descriptor); // TODO
 
         return (
             <div

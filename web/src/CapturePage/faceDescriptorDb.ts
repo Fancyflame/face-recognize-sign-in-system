@@ -1,12 +1,65 @@
-import { FaceMatch, FaceMatcher } from "face-api.js";
+import { FaceMatch, FaceMatcher, LabeledFaceDescriptors } from "face-api.js";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ClassroomClient } from "../../generated/Remote_signinServiceClientPb";
+import { ClassroomReq, Student } from "../../generated/remote_signin_pb";
 
-const CACHED_FACES: FaceMatcher = new FaceMatcher([], 0.5);
 const THRESHOLD = 0.5;
+const REMOTE_DB_ADDR = "localhost:10000";
 
-export async function tryRecognizeFace(desciptor: Float32Array): Promise<FaceMatch | undefined> {
-    const bestMatch = CACHED_FACES.matchDescriptor(desciptor);
-    if (bestMatch.distance < THRESHOLD) {
-        return bestMatch;
-    }
-    // TODO: query network
+export interface FaceDescDb {
+    matchFace(desciptor: Float32Array): Student | undefined;
+}
+
+export function useFaceDescDb(classroom_id: string): FaceDescDb {
+    const clientRef = useRef<ClassroomClient | null>(null);
+    const [students, setStudents] = useState<Student[]>([]);
+
+    useEffect(() => {
+        clientRef.current = new ClassroomClient(REMOTE_DB_ADDR);
+        const client = clientRef.current;
+        const req = new ClassroomReq();
+        req.setClassroomId(classroom_id);
+        client.query(req, null, (_, res) => {
+            const students = res.getOk()?.getStudentsList();
+            if (students) {
+                setStudents(students);
+            } else {
+                console.warn("无法获取学生列表");
+            }
+        });
+    }, [classroom_id]);
+
+    const matcher = useMemo(() => {
+        if (!students.length) {
+            return null;
+        }
+
+        return new FaceMatcher(
+            students.map(
+                (stu) =>
+                    new LabeledFaceDescriptors(stu.getId(), [
+                        new Float32Array(stu.getFaceDescriptorList()),
+                    ]),
+            ),
+        );
+    }, [students]);
+
+    const studentMap = useMemo(() => {
+        return new Map(students.map((stu) => [stu.getId(), stu]));
+    }, [students]);
+
+    return {
+        matchFace(desciptor) {
+            if (!matcher) return undefined;
+
+            const bestMatch = matcher.matchDescriptor(desciptor);
+            if (bestMatch.distance < THRESHOLD) {
+                const student = studentMap.get(bestMatch.label);
+                if (!student) throw "expected defined";
+                return student;
+            } else {
+                return undefined;
+            }
+        },
+    };
 }
