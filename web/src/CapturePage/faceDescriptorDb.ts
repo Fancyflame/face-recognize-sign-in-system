@@ -1,7 +1,8 @@
 import { FaceMatch, FaceMatcher, LabeledFaceDescriptors } from "face-api.js";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { ClassroomClient } from "../../generated/Remote_signinServiceClientPb";
 import { GetStudentsReq, Student } from "../../generated/remote_signin_pb";
+import { useClassroomClient } from "../classroomClient";
 
 const THRESHOLD = 0.5;
 const REMOTE_DB_ADDR = "http://localhost:10000";
@@ -11,12 +12,11 @@ export interface FaceDescDb {
 }
 
 export function useFaceDescDb(classroom_id: string): FaceDescDb {
-    const clientRef = useRef<ClassroomClient | null>(null);
     const [students, setStudents] = useState<Student[]>([]);
 
+    const client = useClassroomClient();
+
     useEffect(() => {
-        clientRef.current = new ClassroomClient(REMOTE_DB_ADDR);
-        const client = clientRef.current;
         const req = new GetStudentsReq();
         req.setClassroomId(classroom_id);
         client.getStudents(req, null, (_, res) => {
