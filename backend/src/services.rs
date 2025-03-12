@@ -1,4 +1,7 @@
-use classroom::{ClassroomReq, ClassroomRes, Student, classroom_res, classroom_server::Classroom};
+use classroom::{
+    ClassroomSummary, GetStudentsReq, GetStudentsRes, ListClassroomReq, ListClassroomRes, Student,
+    classroom_server::Classroom, get_students_res, list_classroom_res,
+};
 use tonic::{Request, Response, Status};
 
 pub mod classroom {
@@ -9,12 +12,14 @@ pub struct ClassroomCore;
 
 #[tonic::async_trait]
 impl Classroom for ClassroomCore {
-    async fn query(&self, req: Request<ClassroomReq>) -> Result<Response<ClassroomRes>, Status> {
+    async fn get_students(
+        &self,
+        req: Request<GetStudentsReq>,
+    ) -> Result<Response<GetStudentsRes>, Status> {
         dbg!(req);
-        let response = Response::new(ClassroomRes {
-            response: Some(classroom_res::Response::Ok(classroom_res::Data {
+        let response = Response::new(GetStudentsRes {
+            response: Some(get_students_res::Response::Ok(get_students_res::Data {
                 classroom_id: "test".into(),
-                name: "测试教室".into(),
                 students: vec![Student {
                     id: "me.id".into(),
                     name: "me.name".into(),
@@ -24,6 +29,21 @@ impl Classroom for ClassroomCore {
         });
 
         Ok(response)
+    }
+
+    async fn list(
+        &self,
+        req: Request<ListClassroomReq>,
+    ) -> Result<Response<ListClassroomRes>, Status> {
+        Ok(Response::new(ListClassroomRes {
+            response: Some(list_classroom_res::Response::Ok(list_classroom_res::Data {
+                classrooms: vec![ClassroomSummary {
+                    id: "test".into(),
+                    name: "测试教室".into(),
+                    student_count: 1,
+                }],
+            })),
+        }))
     }
 }
 

@@ -2,57 +2,149 @@ import * as jspb from 'google-protobuf'
 
 
 
-export class ClassroomReq extends jspb.Message {
-  getClassroomId(): string;
-  setClassroomId(value: string): ClassroomReq;
-
+export class ListClassroomReq extends jspb.Message {
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ClassroomReq.AsObject;
-  static toObject(includeInstance: boolean, msg: ClassroomReq): ClassroomReq.AsObject;
-  static serializeBinaryToWriter(message: ClassroomReq, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ClassroomReq;
-  static deserializeBinaryFromReader(message: ClassroomReq, reader: jspb.BinaryReader): ClassroomReq;
+  toObject(includeInstance?: boolean): ListClassroomReq.AsObject;
+  static toObject(includeInstance: boolean, msg: ListClassroomReq): ListClassroomReq.AsObject;
+  static serializeBinaryToWriter(message: ListClassroomReq, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListClassroomReq;
+  static deserializeBinaryFromReader(message: ListClassroomReq, reader: jspb.BinaryReader): ListClassroomReq;
 }
 
-export namespace ClassroomReq {
+export namespace ListClassroomReq {
+  export type AsObject = {
+  }
+}
+
+export class ListClassroomRes extends jspb.Message {
+  getOk(): ListClassroomRes.Data | undefined;
+  setOk(value?: ListClassroomRes.Data): ListClassroomRes;
+  hasOk(): boolean;
+  clearOk(): ListClassroomRes;
+
+  getErr(): Error | undefined;
+  setErr(value?: Error): ListClassroomRes;
+  hasErr(): boolean;
+  clearErr(): ListClassroomRes;
+
+  getResponseCase(): ListClassroomRes.ResponseCase;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ListClassroomRes.AsObject;
+  static toObject(includeInstance: boolean, msg: ListClassroomRes): ListClassroomRes.AsObject;
+  static serializeBinaryToWriter(message: ListClassroomRes, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListClassroomRes;
+  static deserializeBinaryFromReader(message: ListClassroomRes, reader: jspb.BinaryReader): ListClassroomRes;
+}
+
+export namespace ListClassroomRes {
+  export type AsObject = {
+    ok?: ListClassroomRes.Data.AsObject,
+    err?: Error.AsObject,
+  }
+
+  export class Data extends jspb.Message {
+    getClassroomsList(): Array<ClassroomSummary>;
+    setClassroomsList(value: Array<ClassroomSummary>): Data;
+    clearClassroomsList(): Data;
+    addClassrooms(value?: ClassroomSummary, index?: number): ClassroomSummary;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): Data.AsObject;
+    static toObject(includeInstance: boolean, msg: Data): Data.AsObject;
+    static serializeBinaryToWriter(message: Data, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): Data;
+    static deserializeBinaryFromReader(message: Data, reader: jspb.BinaryReader): Data;
+  }
+
+  export namespace Data {
+    export type AsObject = {
+      classroomsList: Array<ClassroomSummary.AsObject>,
+    }
+  }
+
+
+  export enum ResponseCase { 
+    RESPONSE_NOT_SET = 0,
+    OK = 1,
+    ERR = 2,
+  }
+}
+
+export class ClassroomSummary extends jspb.Message {
+  getId(): string;
+  setId(value: string): ClassroomSummary;
+
+  getName(): string;
+  setName(value: string): ClassroomSummary;
+
+  getStudentCount(): number;
+  setStudentCount(value: number): ClassroomSummary;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ClassroomSummary.AsObject;
+  static toObject(includeInstance: boolean, msg: ClassroomSummary): ClassroomSummary.AsObject;
+  static serializeBinaryToWriter(message: ClassroomSummary, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ClassroomSummary;
+  static deserializeBinaryFromReader(message: ClassroomSummary, reader: jspb.BinaryReader): ClassroomSummary;
+}
+
+export namespace ClassroomSummary {
+  export type AsObject = {
+    id: string,
+    name: string,
+    studentCount: number,
+  }
+}
+
+export class GetStudentsReq extends jspb.Message {
+  getClassroomId(): string;
+  setClassroomId(value: string): GetStudentsReq;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetStudentsReq.AsObject;
+  static toObject(includeInstance: boolean, msg: GetStudentsReq): GetStudentsReq.AsObject;
+  static serializeBinaryToWriter(message: GetStudentsReq, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetStudentsReq;
+  static deserializeBinaryFromReader(message: GetStudentsReq, reader: jspb.BinaryReader): GetStudentsReq;
+}
+
+export namespace GetStudentsReq {
   export type AsObject = {
     classroomId: string,
   }
 }
 
-export class ClassroomRes extends jspb.Message {
-  getOk(): ClassroomRes.Data | undefined;
-  setOk(value?: ClassroomRes.Data): ClassroomRes;
+export class GetStudentsRes extends jspb.Message {
+  getOk(): GetStudentsRes.Data | undefined;
+  setOk(value?: GetStudentsRes.Data): GetStudentsRes;
   hasOk(): boolean;
-  clearOk(): ClassroomRes;
+  clearOk(): GetStudentsRes;
 
   getErr(): Error | undefined;
-  setErr(value?: Error): ClassroomRes;
+  setErr(value?: Error): GetStudentsRes;
   hasErr(): boolean;
-  clearErr(): ClassroomRes;
+  clearErr(): GetStudentsRes;
 
-  getResponseCase(): ClassroomRes.ResponseCase;
+  getResponseCase(): GetStudentsRes.ResponseCase;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ClassroomRes.AsObject;
-  static toObject(includeInstance: boolean, msg: ClassroomRes): ClassroomRes.AsObject;
-  static serializeBinaryToWriter(message: ClassroomRes, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ClassroomRes;
-  static deserializeBinaryFromReader(message: ClassroomRes, reader: jspb.BinaryReader): ClassroomRes;
+  toObject(includeInstance?: boolean): GetStudentsRes.AsObject;
+  static toObject(includeInstance: boolean, msg: GetStudentsRes): GetStudentsRes.AsObject;
+  static serializeBinaryToWriter(message: GetStudentsRes, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetStudentsRes;
+  static deserializeBinaryFromReader(message: GetStudentsRes, reader: jspb.BinaryReader): GetStudentsRes;
 }
 
-export namespace ClassroomRes {
+export namespace GetStudentsRes {
   export type AsObject = {
-    ok?: ClassroomRes.Data.AsObject,
+    ok?: GetStudentsRes.Data.AsObject,
     err?: Error.AsObject,
   }
 
   export class Data extends jspb.Message {
     getClassroomId(): string;
     setClassroomId(value: string): Data;
-
-    getName(): string;
-    setName(value: string): Data;
 
     getStudentsList(): Array<Student>;
     setStudentsList(value: Array<Student>): Data;
@@ -70,7 +162,6 @@ export namespace ClassroomRes {
   export namespace Data {
     export type AsObject = {
       classroomId: string,
-      name: string,
       studentsList: Array<Student.AsObject>,
     }
   }

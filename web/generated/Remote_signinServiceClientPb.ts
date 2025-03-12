@@ -39,47 +39,90 @@ export class ClassroomClient {
     this.options_ = options;
   }
 
-  methodDescriptorQuery = new grpcWeb.MethodDescriptor(
-    '/remote_signin.Classroom/Query',
+  methodDescriptorList = new grpcWeb.MethodDescriptor(
+    '/remote_signin.Classroom/List',
     grpcWeb.MethodType.UNARY,
-    remote_signin_pb.ClassroomReq,
-    remote_signin_pb.ClassroomRes,
-    (request: remote_signin_pb.ClassroomReq) => {
+    remote_signin_pb.ListClassroomReq,
+    remote_signin_pb.ListClassroomRes,
+    (request: remote_signin_pb.ListClassroomReq) => {
       return request.serializeBinary();
     },
-    remote_signin_pb.ClassroomRes.deserializeBinary
+    remote_signin_pb.ListClassroomRes.deserializeBinary
   );
 
-  query(
-    request: remote_signin_pb.ClassroomReq,
-    metadata?: grpcWeb.Metadata | null): Promise<remote_signin_pb.ClassroomRes>;
+  list(
+    request: remote_signin_pb.ListClassroomReq,
+    metadata?: grpcWeb.Metadata | null): Promise<remote_signin_pb.ListClassroomRes>;
 
-  query(
-    request: remote_signin_pb.ClassroomReq,
+  list(
+    request: remote_signin_pb.ListClassroomReq,
     metadata: grpcWeb.Metadata | null,
     callback: (err: grpcWeb.RpcError,
-               response: remote_signin_pb.ClassroomRes) => void): grpcWeb.ClientReadableStream<remote_signin_pb.ClassroomRes>;
+               response: remote_signin_pb.ListClassroomRes) => void): grpcWeb.ClientReadableStream<remote_signin_pb.ListClassroomRes>;
 
-  query(
-    request: remote_signin_pb.ClassroomReq,
+  list(
+    request: remote_signin_pb.ListClassroomReq,
     metadata?: grpcWeb.Metadata | null,
     callback?: (err: grpcWeb.RpcError,
-               response: remote_signin_pb.ClassroomRes) => void) {
+               response: remote_signin_pb.ListClassroomRes) => void) {
     if (callback !== undefined) {
       return this.client_.rpcCall(
         this.hostname_ +
-          '/remote_signin.Classroom/Query',
+          '/remote_signin.Classroom/List',
         request,
         metadata || {},
-        this.methodDescriptorQuery,
+        this.methodDescriptorList,
         callback);
     }
     return this.client_.unaryCall(
     this.hostname_ +
-      '/remote_signin.Classroom/Query',
+      '/remote_signin.Classroom/List',
     request,
     metadata || {},
-    this.methodDescriptorQuery);
+    this.methodDescriptorList);
+  }
+
+  methodDescriptorGetStudents = new grpcWeb.MethodDescriptor(
+    '/remote_signin.Classroom/GetStudents',
+    grpcWeb.MethodType.UNARY,
+    remote_signin_pb.GetStudentsReq,
+    remote_signin_pb.GetStudentsRes,
+    (request: remote_signin_pb.GetStudentsReq) => {
+      return request.serializeBinary();
+    },
+    remote_signin_pb.GetStudentsRes.deserializeBinary
+  );
+
+  getStudents(
+    request: remote_signin_pb.GetStudentsReq,
+    metadata?: grpcWeb.Metadata | null): Promise<remote_signin_pb.GetStudentsRes>;
+
+  getStudents(
+    request: remote_signin_pb.GetStudentsReq,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: remote_signin_pb.GetStudentsRes) => void): grpcWeb.ClientReadableStream<remote_signin_pb.GetStudentsRes>;
+
+  getStudents(
+    request: remote_signin_pb.GetStudentsReq,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: remote_signin_pb.GetStudentsRes) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/remote_signin.Classroom/GetStudents',
+        request,
+        metadata || {},
+        this.methodDescriptorGetStudents,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/remote_signin.Classroom/GetStudents',
+    request,
+    metadata || {},
+    this.methodDescriptorGetStudents);
   }
 
 }

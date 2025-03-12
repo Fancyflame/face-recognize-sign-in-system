@@ -14,6 +14,9 @@ importers:
       face-api.js:
         specifier: ^0.22.2
         version: 0.22.2
+      google-protobuf:
+        specifier: ^3.21.4
+        version: 3.21.4
       grpc-web:
         specifier: ^1.5.0
         version: 1.5.0
@@ -36,6 +39,9 @@ importers:
       '@rsbuild/plugin-react':
         specifier: ^1.1.1
         version: 1.1.1(@rsbuild/core@1.2.14)
+      '@types/google-protobuf':
+        specifier: ^3.15.12
+        version: 3.15.12
       '@types/less':
         specifier: ^3.0.8
         version: 3.0.8
@@ -45,9 +51,6 @@ importers:
       '@types/react-dom':
         specifier: ^19.0.4
         version: 19.0.4(@types/react@19.0.10)
-      google-protobuf:
-        specifier: ^3.21.4
-        version: 3.21.4
       protoc-gen-js:
         specifier: 3.21.4-4
         version: 3.21.4-4
@@ -261,6 +264,9 @@ packages:
 
   '@types/cookie@0.6.0':
     resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
+
+  '@types/google-protobuf@3.15.12':
+    resolution: {integrity: sha512-40um9QqwHjRS92qnOaDpL7RmDK15NuZYo9HihiJRbYkMQZlWnuH8AdvbMy8/o6lgLmKbDUKa+OALCltHdbOTpQ==}
 
   '@types/less@3.0.8':
     resolution: {integrity: sha512-Gjm4+H9noDJgu5EdT3rUw5MhPBag46fiOy27BefvWkNL8mlZnKnCaVVVTLKj6RYXed9b62CPKnPav9govyQDzA==}
@@ -1290,6 +1296,8 @@ snapshots:
       seedrandom: 2.4.3
 
   '@types/cookie@0.6.0': {}
+
+  '@types/google-protobuf@3.15.12': {}
 
   '@types/less@3.0.8': {}
 

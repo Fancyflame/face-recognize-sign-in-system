@@ -2,14 +2,34 @@ syntax = "proto3";
 package remote_signin;
 
 service Classroom {
-    rpc Query(ClassroomReq) returns (ClassroomRes);
+    rpc List(ListClassroomReq) returns (ListClassroomRes);
+    rpc GetStudents(GetStudentsReq) returns (GetStudentsRes);
 }
 
-message ClassroomReq {
+message ListClassroomReq {}
+
+message ListClassroomRes {
+    oneof response {
+        Data ok = 1;
+        Error err = 2;
+    }
+
+    message Data {
+        repeated ClassroomSummary classrooms = 1;
+    }
+}
+
+message ClassroomSummary {
+    string id = 1;
+    string name = 2;
+    uint32 student_count = 3;
+}
+
+message GetStudentsReq {
     string classroom_id = 1;
 }
 
-message ClassroomRes {
+message GetStudentsRes {
     oneof response {
         Data ok = 1;
         Error err = 2;
@@ -17,8 +37,7 @@ message ClassroomRes {
 
     message Data {
         string classroom_id = 1;
-        string name = 2;
-        repeated Student students = 3;
+        repeated Student students = 2;
     }
 }
 
