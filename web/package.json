@@ -10,6 +10,7 @@
     "rpc": "node scripts/run.js scripts/rpc.sh"
   },
   "dependencies": {
+    "@douyinfe/semi-icons": "^2.76.0",
     "@rsbuild/plugin-node-polyfill": "^1.3.0",
     "face-api.js": "^0.22.2",
     "google-protobuf": "^3.21.4",
