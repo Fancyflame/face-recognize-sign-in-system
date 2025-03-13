@@ -10,7 +10,7 @@ mod services;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let addr = "127.0.0.1:10000".parse().unwrap();
+    let addr = "0.0.0.0:10000".parse().unwrap();
     let server = ClassroomServer::new(ClassroomCore);
 
     let cors_layer = tower_http::cors::CorsLayer::new()

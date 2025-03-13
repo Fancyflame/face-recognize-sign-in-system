@@ -9,9 +9,12 @@ import { ClassroomClient } from "../generated/Remote_signinServiceClientPb";
 import { ClassroomClientProvider } from "./classroomClient";
 
 const root = createRoot(document.getElementById("root")!);
+const serviceLocation = `http://${window.location.hostname}:10000`;
+alert(serviceLocation);
+
 root.render(
     <React.StrictMode>
-        <ClassroomClientProvider addr="http://localhost:10000">
+        <ClassroomClientProvider addr={serviceLocation}>
             <Router>
                 <Routes>
                     <Route path="/" element={<ClassroomPage />} />
