@@ -1,8 +1,15 @@
 import * as faceapi from "face-api.js";
 import * as testDescriptors from "./testDescriptors";
 import { useFaceDescDb } from "./faceDescriptorDb";
+import { Student } from "../../generated/remote_signin_pb";
+import { useEffect, useState } from "react";
 
-export type DetectionResults = Awaited<ReturnType<typeof runModel>>;
+// 获得face api识别返回值的单个检测结果类型
+export type DetectionResult = Awaited<
+    ReturnType<typeof runModel>
+> extends Array<infer E>
+    ? E
+    : never;
 
 export async function loadModel(pathDir: string) {
     // await faceapi.loadMtcnnModel(pathDir);
@@ -23,19 +30,59 @@ export async function runModel(video: HTMLVideoElement) {
 const COLOR_RECOGNIZED = "#54fe9b";
 const COLOR_UNRECOGNIZED = "#e84118";
 
+export interface MarkedDetection {
+    detection: DetectionResult;
+    isMatched: boolean;
+}
+
+export function useMatchFace(detections: DetectionResult[]) {
+    const [signedInStudents, setSignedInStudents] = useState<
+        Map<string, Student>
+    >(new Map());
+    const [markedDetections, setMarkedDetections] = useState<MarkedDetection[]>(
+        [],
+    );
+    const db = useFaceDescDb("test");
+
+    useEffect(() => {
+        const newlyInsert: Student[] = [];
+
+        const marked = detections.map((det) => {
+            const matches = db.matchFace(det.descriptor);
+            if (matches && !signedInStudents.has(matches.getId())) {
+                newlyInsert.push(matches);
+            }
+
+            return {
+                detection: det,
+                isMatched: Boolean(matches),
+            };
+        });
+        setMarkedDetections(marked);
+
+        if (newlyInsert.length) {
+            const newMap = new Map(signedInStudents);
+            for (const stu of newlyInsert) {
+                newMap.set(stu.getId(), stu);
+            }
+            setSignedInStudents(newMap);
+        }
+    }, [detections]);
+
+    return { signedInStudents, markedDetections };
+}
+
 export interface FaceDetectionsBoxProps {
     video: HTMLVideoElement;
-    detections: DetectionResults;
+    detections: MarkedDetection[];
 }
 
 export function FaceDetectionsBox(props: FaceDetectionsBoxProps) {
     const { video, detections } = props;
-    const db = useFaceDescDb("test");
     const videoBox = getVideoDisplayRect(video);
 
-    return detections.map((det, index) => {
-        const { x, y, width, height } = det.alignedRect.relativeBox;
-        const matches = !!db.matchFace(det.descriptor); // TODO
+    return detections.map(({ detection, isMatched }, index) => {
+        const { x, y, width, height } = detection.alignedRect.relativeBox;
 
         return (
             <div
@@ -47,7 +94,7 @@ export function FaceDetectionsBox(props: FaceDetectionsBoxProps) {
                     width: width * videoBox.width,
                     height: height * videoBox.height,
                     border: `3px solid ${
-                        matches ? COLOR_RECOGNIZED : COLOR_UNRECOGNIZED
+                        isMatched ? COLOR_RECOGNIZED : COLOR_UNRECOGNIZED
                     }`,
                     borderRadius: 5,
                 }}

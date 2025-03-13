@@ -1,18 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
 import styles from "./index.module.less";
 import {
-    DetectionResults,
+    DetectionResult,
     FaceDetectionsBox,
     loadModel,
     runModel,
+    useMatchFace,
 } from "./faceRecognition";
+import { Student } from "../../generated/remote_signin_pb";
+import SignedStudent from "./SignedStudent";
 
 type ModelLoadState = "loading" | "ok" | "error";
 
 export default function CapturePage() {
     const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
     const [recording, setRecording] = useState(false);
-    const [detections, setDetections] = useState<DetectionResults>([]);
+    const [detections, setDetections] = useState<DetectionResult[]>([]);
     const [modelLoadState, setModelLoadState] =
         useState<ModelLoadState>("loading");
 
@@ -30,6 +33,8 @@ export default function CapturePage() {
                 setModelLoadState("error");
             });
     }, []);
+
+    const { signedInStudents, markedDetections } = useMatchFace(detections);
 
     useEffect(() => {
         if (!recording) {
@@ -49,9 +54,24 @@ export default function CapturePage() {
         };
     }, [recording]);
 
+    const signedInStudentsDisplay = useMemo(() => {
+        return signedInStudents
+            .values()
+            .map((student) => {
+                return (
+                    <SignedStudent
+                        key={student.getId()}
+                        data={student}
+                        signinMode="normal"
+                    />
+                );
+            })
+            .toArray();
+    }, [signedInStudents]);
+
     const boxes = useMemo(() => {
         return videoEl ? (
-            <FaceDetectionsBox video={videoEl} detections={detections} />
+            <FaceDetectionsBox video={videoEl} detections={markedDetections} />
         ) : null;
     }, [detections]);
 
@@ -70,7 +90,7 @@ export default function CapturePage() {
             <video className={styles.camera} ref={setVideoEl}></video>
             <div>{boxes}</div>
             <div className={styles.overlay}>
-                <div className={styles.students}></div>
+                <div className={styles.students}>{signedInStudentsDisplay}</div>
                 <button
                     disabled={modelLoadState !== "ok"}
                     onClick={() => setRecording(!recording)}
