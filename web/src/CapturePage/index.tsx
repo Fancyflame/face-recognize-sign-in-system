@@ -9,6 +9,7 @@ import {
 } from "./faceRecognition";
 import { Student } from "../../generated/remote_signin_pb";
 import SignedStudent from "./SignedStudent";
+import { IconArrowLeft } from "@douyinfe/semi-icons";
 
 type ModelLoadState = "loading" | "ok" | "error";
 
@@ -90,7 +91,15 @@ export default function CapturePage() {
             <video className={styles.camera} ref={setVideoEl}></video>
             <div>{boxes}</div>
             <div className={styles.overlay}>
-                <div className={styles.students}>{signedInStudentsDisplay}</div>
+                <div className={styles.leftHalf}>
+                    <button className={styles.backBtn}>
+                        <IconArrowLeft />
+                    </button>
+                    <div className={styles.students}>
+                        {signedInStudentsDisplay}
+                    </div>
+                </div>
+
                 <button
                     disabled={modelLoadState !== "ok"}
                     onClick={() => setRecording(!recording)}

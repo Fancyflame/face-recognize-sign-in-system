@@ -5,12 +5,10 @@ import "./index.less";
 import NotFoundPage from "./NotFoundPage";
 import CapturePage from "./CapturePage/index";
 import { ClassroomPage } from "./ClassroomPage";
-import { ClassroomClient } from "../generated/Remote_signinServiceClientPb";
 import { ClassroomClientProvider } from "./classroomClient";
 
 const root = createRoot(document.getElementById("root")!);
 const serviceLocation = `http://${window.location.hostname}:10000`;
-alert(serviceLocation);
 
 root.render(
     <React.StrictMode>

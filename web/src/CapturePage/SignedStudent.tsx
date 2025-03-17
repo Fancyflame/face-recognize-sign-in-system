@@ -11,10 +11,10 @@ export default function SignedStudent(props: SignedStudentProps) {
     return (
         <div
             style={{
-                width: 190,
+                width: 200,
                 height: 40,
                 borderRadius: "2px",
-                background: `linear-gradient(20deg, ${bgColor} 10%, transparent 70%)`,
+                background: `linear-gradient(30deg, ${bgColor} 20%, transparent 60%)`,
                 color: "white",
                 lineHeight: "40px",
                 paddingLeft: 10,
