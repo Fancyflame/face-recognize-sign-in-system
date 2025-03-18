@@ -1,6 +1,6 @@
 use classroom::{
-    ClassroomSummary, GetStudentsReq, GetStudentsRes, ListClassroomReq, ListClassroomRes, Student,
-    classroom_server::Classroom, get_students_res, list_classroom_res,
+    ClassroomSummary, GetDetailsReq, GetDetailsRes, ListClassroomReq, ListClassroomRes, Student,
+    classroom_server::Classroom, get_details_res, list_classroom_res,
 };
 use tonic::{Request, Response, Status};
 
@@ -12,14 +12,18 @@ pub struct ClassroomCore;
 
 #[tonic::async_trait]
 impl Classroom for ClassroomCore {
-    async fn get_students(
+    async fn get_details(
         &self,
-        req: Request<GetStudentsReq>,
-    ) -> Result<Response<GetStudentsRes>, Status> {
+        req: Request<GetDetailsReq>,
+    ) -> Result<Response<GetDetailsRes>, Status> {
         dbg!(req);
-        let response = Response::new(GetStudentsRes {
-            response: Some(get_students_res::Response::Ok(get_students_res::Data {
-                classroom_id: "test".into(),
+        let response = Response::new(GetDetailsRes {
+            response: Some(get_details_res::Response::Ok(get_details_res::Data {
+                info: Some(ClassroomSummary {
+                    id: "test".into(),
+                    name: "测试教室".into(),
+                    student_count: 1,
+                }),
                 students: vec![Student {
                     id: "me.id".into(),
                     name: "me.name".into(),

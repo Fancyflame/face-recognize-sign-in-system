@@ -82,47 +82,47 @@ export class ClassroomClient {
     this.methodDescriptorList);
   }
 
-  methodDescriptorGetStudents = new grpcWeb.MethodDescriptor(
-    '/remote_signin.Classroom/GetStudents',
+  methodDescriptorGetDetails = new grpcWeb.MethodDescriptor(
+    '/remote_signin.Classroom/GetDetails',
     grpcWeb.MethodType.UNARY,
-    remote_signin_pb.GetStudentsReq,
-    remote_signin_pb.GetStudentsRes,
-    (request: remote_signin_pb.GetStudentsReq) => {
+    remote_signin_pb.GetDetailsReq,
+    remote_signin_pb.GetDetailsRes,
+    (request: remote_signin_pb.GetDetailsReq) => {
       return request.serializeBinary();
     },
-    remote_signin_pb.GetStudentsRes.deserializeBinary
+    remote_signin_pb.GetDetailsRes.deserializeBinary
   );
 
-  getStudents(
-    request: remote_signin_pb.GetStudentsReq,
-    metadata?: grpcWeb.Metadata | null): Promise<remote_signin_pb.GetStudentsRes>;
+  getDetails(
+    request: remote_signin_pb.GetDetailsReq,
+    metadata?: grpcWeb.Metadata | null): Promise<remote_signin_pb.GetDetailsRes>;
 
-  getStudents(
-    request: remote_signin_pb.GetStudentsReq,
+  getDetails(
+    request: remote_signin_pb.GetDetailsReq,
     metadata: grpcWeb.Metadata | null,
     callback: (err: grpcWeb.RpcError,
-               response: remote_signin_pb.GetStudentsRes) => void): grpcWeb.ClientReadableStream<remote_signin_pb.GetStudentsRes>;
+               response: remote_signin_pb.GetDetailsRes) => void): grpcWeb.ClientReadableStream<remote_signin_pb.GetDetailsRes>;
 
-  getStudents(
-    request: remote_signin_pb.GetStudentsReq,
+  getDetails(
+    request: remote_signin_pb.GetDetailsReq,
     metadata?: grpcWeb.Metadata | null,
     callback?: (err: grpcWeb.RpcError,
-               response: remote_signin_pb.GetStudentsRes) => void) {
+               response: remote_signin_pb.GetDetailsRes) => void) {
     if (callback !== undefined) {
       return this.client_.rpcCall(
         this.hostname_ +
-          '/remote_signin.Classroom/GetStudents',
+          '/remote_signin.Classroom/GetDetails',
         request,
         metadata || {},
-        this.methodDescriptorGetStudents,
+        this.methodDescriptorGetDetails,
         callback);
     }
     return this.client_.unaryCall(
     this.hostname_ +
-      '/remote_signin.Classroom/GetStudents',
+      '/remote_signin.Classroom/GetDetails',
     request,
     metadata || {},
-    this.methodDescriptorGetStudents);
+    this.methodDescriptorGetDetails);
   }
 
 }

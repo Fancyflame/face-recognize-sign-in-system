@@ -10,6 +10,7 @@ import {
 import { Student } from "../../generated/remote_signin_pb";
 import SignedStudent from "./SignedStudent";
 import { IconArrowLeft } from "@douyinfe/semi-icons";
+import { IconButton } from "../components/iconButton";
 
 type ModelLoadState = "loading" | "ok" | "error";
 
@@ -92,9 +93,10 @@ export default function CapturePage() {
             <div>{boxes}</div>
             <div className={styles.overlay}>
                 <div className={styles.leftHalf}>
-                    <button className={styles.backBtn}>
-                        <IconArrowLeft />
-                    </button>
+                    <IconButton
+                        icon={<IconArrowLeft />}
+                        className={styles.backBtn}
+                    />
                     <div className={styles.students}>
                         {signedInStudentsDisplay}
                     </div>

@@ -97,54 +97,56 @@ export namespace ClassroomSummary {
   }
 }
 
-export class GetStudentsReq extends jspb.Message {
+export class GetDetailsReq extends jspb.Message {
   getClassroomId(): string;
-  setClassroomId(value: string): GetStudentsReq;
+  setClassroomId(value: string): GetDetailsReq;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): GetStudentsReq.AsObject;
-  static toObject(includeInstance: boolean, msg: GetStudentsReq): GetStudentsReq.AsObject;
-  static serializeBinaryToWriter(message: GetStudentsReq, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): GetStudentsReq;
-  static deserializeBinaryFromReader(message: GetStudentsReq, reader: jspb.BinaryReader): GetStudentsReq;
+  toObject(includeInstance?: boolean): GetDetailsReq.AsObject;
+  static toObject(includeInstance: boolean, msg: GetDetailsReq): GetDetailsReq.AsObject;
+  static serializeBinaryToWriter(message: GetDetailsReq, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetDetailsReq;
+  static deserializeBinaryFromReader(message: GetDetailsReq, reader: jspb.BinaryReader): GetDetailsReq;
 }
 
-export namespace GetStudentsReq {
+export namespace GetDetailsReq {
   export type AsObject = {
     classroomId: string,
   }
 }
 
-export class GetStudentsRes extends jspb.Message {
-  getOk(): GetStudentsRes.Data | undefined;
-  setOk(value?: GetStudentsRes.Data): GetStudentsRes;
+export class GetDetailsRes extends jspb.Message {
+  getOk(): GetDetailsRes.Data | undefined;
+  setOk(value?: GetDetailsRes.Data): GetDetailsRes;
   hasOk(): boolean;
-  clearOk(): GetStudentsRes;
+  clearOk(): GetDetailsRes;
 
   getErr(): Error | undefined;
-  setErr(value?: Error): GetStudentsRes;
+  setErr(value?: Error): GetDetailsRes;
   hasErr(): boolean;
-  clearErr(): GetStudentsRes;
+  clearErr(): GetDetailsRes;
 
-  getResponseCase(): GetStudentsRes.ResponseCase;
+  getResponseCase(): GetDetailsRes.ResponseCase;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): GetStudentsRes.AsObject;
-  static toObject(includeInstance: boolean, msg: GetStudentsRes): GetStudentsRes.AsObject;
-  static serializeBinaryToWriter(message: GetStudentsRes, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): GetStudentsRes;
-  static deserializeBinaryFromReader(message: GetStudentsRes, reader: jspb.BinaryReader): GetStudentsRes;
+  toObject(includeInstance?: boolean): GetDetailsRes.AsObject;
+  static toObject(includeInstance: boolean, msg: GetDetailsRes): GetDetailsRes.AsObject;
+  static serializeBinaryToWriter(message: GetDetailsRes, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetDetailsRes;
+  static deserializeBinaryFromReader(message: GetDetailsRes, reader: jspb.BinaryReader): GetDetailsRes;
 }
 
-export namespace GetStudentsRes {
+export namespace GetDetailsRes {
   export type AsObject = {
-    ok?: GetStudentsRes.Data.AsObject,
+    ok?: GetDetailsRes.Data.AsObject,
     err?: Error.AsObject,
   }
 
   export class Data extends jspb.Message {
-    getClassroomId(): string;
-    setClassroomId(value: string): Data;
+    getInfo(): ClassroomSummary | undefined;
+    setInfo(value?: ClassroomSummary): Data;
+    hasInfo(): boolean;
+    clearInfo(): Data;
 
     getStudentsList(): Array<Student>;
     setStudentsList(value: Array<Student>): Data;
@@ -161,7 +163,7 @@ export namespace GetStudentsRes {
 
   export namespace Data {
     export type AsObject = {
-      classroomId: string,
+      info?: ClassroomSummary.AsObject,
       studentsList: Array<Student.AsObject>,
     }
   }
