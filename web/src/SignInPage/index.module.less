@@ -6,64 +6,70 @@
     align-items: stretch;
     flex-direction: column;
 
-    .info-part {
+    .top-half {
         flex: 0 0 auto;
         height: 40vh;
         min-height: 290px;
-        box-shadow: 0px 10px 16px 0px #aaa;
+        box-shadow: 0px 0px 16px 0px #aaa;
         background: white;
         z-index: 1;
         padding: 30px;
         display: flex;
-        justify-content: stretch;
-        align-items: center;
+        flex-direction: column;
+        justify-content: end;
 
-        .left-half {
-            flex: 1 1 auto;
-            height: 100%;
+        .info-part {
             display: flex;
-            flex-direction: column;
-            justify-content: end;
-            align-items: start;
+            justify-content: stretch;
+            align-items: center;
 
-            * {
-                white-space: nowrap;
-            }
-
-            .title,
-            .green-left {
-                border-left: 6px solid #2ecc71;
-                padding-left: 20px;
-                border-top-left-radius: 0px;
-                border-bottom-left-radius: 0px;
-            }
-
-            .title {
-                &:extend(.green-left);
-                font-size: 50px;
-                margin-bottom: 15px;
-            }
-
-            .summary-tab {
+            .left-half {
+                flex: 1 1 auto;
+                height: 100%;
                 display: flex;
                 flex-direction: column;
-                color: #555;
-                gap: 4px;
-                font-size: 20px;
-                &:extend(.green-left);
+                justify-content: end;
+                align-items: start;
+
+                * {
+                    white-space: nowrap;
+                }
+
+                .title,
+                .green-left {
+                    border-left: 6px solid #2ecc71;
+                    padding-left: 20px;
+                    border-top-left-radius: 0px;
+                    border-bottom-left-radius: 0px;
+                }
+
+                .title {
+                    &:extend(.green-left);
+                    font-size: 50px;
+                    margin-bottom: 15px;
+                }
+
+                .summary-tab {
+                    display: flex;
+                    flex-direction: column;
+                    color: #555;
+                    gap: 4px;
+                    font-size: 20px;
+                    &:extend(.green-left);
+                }
             }
-        }
 
-        .right-half {
-            flex: 0 0 80px;
+            .right-half {
+                flex: 0 0 80px;
 
-            .record-btn {
-                padding: 14px;
-                width: 70px;
-                height: 70px;
-                border-radius: 20%;
-                background: #e74c3c;
-                color: white;
+                .record-btn {
+                    padding: 14px;
+                    width: 70px;
+                    height: 70px;
+                    border-radius: 20%;
+                    background: #e74c3c;
+                    color: white;
+                }
             }
         }
     }

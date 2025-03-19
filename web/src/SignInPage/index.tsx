@@ -85,20 +85,22 @@ function LoadedPage({
 }) {
     return (
         <div className={styles.container}>
-            <div className={styles.infoPart}>
-                <div className={styles.leftHalf}>
-                    <IconButton icon={<IconArrowLeft />} />
-                    <h1 className={styles.title}>{summary.getName()}</h1>
-                    <div className={styles.summaryTab}>
-                        <span>学生人数：{students.length}</span>
-                        <span>教室ID：{summary.getId()}</span>
+            <div className={styles.topHalf}>
+                <IconButton icon={<IconArrowLeft />} />
+                <div className={styles.infoPart}>
+                    <div className={styles.leftHalf}>
+                        <h1 className={styles.title}>{summary.getName()}</h1>
+                        <div className={styles.summaryTab}>
+                            <span>学生人数：{students.length}</span>
+                            <span>教室ID：{summary.getId()}</span>
+                        </div>
                     </div>
-                </div>
-                <div className={styles.rightHalf}>
-                    <IconButton
-                        icon={<IconCamera />}
-                        className={styles.recordBtn}
-                    />
+                    <div className={styles.rightHalf}>
+                        <IconButton
+                            icon={<IconCamera />}
+                            className={styles.recordBtn}
+                        />
+                    </div>
                 </div>
             </div>
             <div className={styles.stuPart}></div>
