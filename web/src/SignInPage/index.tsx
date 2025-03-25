@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useClassroomClient } from "../classroomClient";
 import {
@@ -7,14 +7,8 @@ import {
     GetDetailsRes,
     Student,
 } from "../../generated/remote_signin_pb";
-import { StatusCode } from "grpc-web";
 import styles from "./index.module.less";
-import {
-    IconArrowLeft,
-    IconCamera,
-    IconPlay,
-    IconVideo,
-} from "@douyinfe/semi-icons";
+import { IconArrowLeft, IconCamera } from "@douyinfe/semi-icons";
 import { IconButton } from "../components/iconButton";
 
 type Data =
@@ -76,13 +70,62 @@ export function SignInPage() {
     }
 }
 
+interface LocalStudent {
+    id: string;
+    name: string;
+    faceDescriptor: Float32Array;
+    isSignedIn: boolean;
+}
+
 function LoadedPage({
     summary,
-    students,
+    students: studentsArray,
 }: {
     summary: ClassroomSummary;
     students: Array<Student>;
 }) {
+    const [students, setStudents] = useState<Map<string, LocalStudent>>(
+        new Map(),
+    );
+
+    useEffect(() => {
+        setStudents(
+            new Map(
+                studentsArray.map((stu) => [
+                    stu.getId(),
+                    {
+                        id: stu.getId(),
+                        name: stu.getName(),
+                        faceDescriptor: new Float32Array(
+                            stu.getFaceDescriptorList(),
+                        ),
+                        isSignedIn: false,
+                    },
+                ]),
+            ),
+        );
+    }, []);
+
+    const studentDisplay = useMemo(() => {
+        return students
+            .entries()
+            .map(([id, stu]) => {
+                const className = [
+                    styles.card,
+                    stu.isSignedIn ? styles.signedIn : "",
+                ].join(" ");
+
+                return (
+                    <div className={className} key={id}>
+                        {stu.name +
+                            " - " +
+                            (stu.isSignedIn ? "已签到" : "未签到")}
+                    </div>
+                );
+            })
+            .toArray();
+    }, [students]);
+
     return (
         <div className={styles.container}>
             <div className={styles.topHalf}>
@@ -91,7 +134,7 @@ function LoadedPage({
                     <div className={styles.leftHalf}>
                         <h1 className={styles.title}>{summary.getName()}</h1>
                         <div className={styles.summaryTab}>
-                            <span>学生人数：{students.length}</span>
+                            <span>学生人数：{students.size}</span>
                             <span>教室ID：{summary.getId()}</span>
                         </div>
                     </div>
@@ -103,7 +146,7 @@ function LoadedPage({
                     </div>
                 </div>
             </div>
-            <div className={styles.stuPart}></div>
+            <div className={styles.bottomHalf}>{studentDisplay}</div>
         </div>
     );
 }
