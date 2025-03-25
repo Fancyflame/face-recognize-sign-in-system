@@ -3,6 +3,7 @@ import * as testDescriptors from "./testDescriptors";
 import { useFaceDescDb } from "./faceDescriptorDb";
 import { Student } from "../../generated/remote_signin_pb";
 import { useEffect, useState } from "react";
+import { StudentsInfoProps } from ".";
 
 // 获得face api识别返回值的单个检测结果类型
 export type DetectionResult = Awaited<
@@ -35,22 +36,22 @@ export interface MarkedDetection {
     isMatched: boolean;
 }
 
-export function useMatchFace(detections: DetectionResult[]) {
-    const [signedInStudents, setSignedInStudents] = useState<
-        Map<string, Student>
-    >(new Map());
+export function useMatchFace(
+    detections: DetectionResult[],
+    info: StudentsInfoProps,
+) {
     const [markedDetections, setMarkedDetections] = useState<MarkedDetection[]>(
         [],
     );
-    const db = useFaceDescDb("test");
+    const db = useFaceDescDb(info.students);
 
     useEffect(() => {
-        const newlyInsert: Student[] = [];
+        const newlyInsert: string[] = [];
 
         const marked = detections.map((det) => {
             const matches = db.matchFace(det.descriptor);
-            if (matches && !signedInStudents.has(matches.getId())) {
-                newlyInsert.push(matches);
+            if (matches && !info.signedInList.has(matches.id)) {
+                newlyInsert.push(matches.id);
             }
 
             return {
@@ -61,15 +62,15 @@ export function useMatchFace(detections: DetectionResult[]) {
         setMarkedDetections(marked);
 
         if (newlyInsert.length) {
-            const newMap = new Map(signedInStudents);
-            for (const stu of newlyInsert) {
-                newMap.set(stu.getId(), stu);
+            const newSet = new Set(info.signedInList);
+            for (const stuId of newlyInsert) {
+                newSet.add(stuId);
             }
-            setSignedInStudents(newMap);
+            info.setSignedInList(newSet);
         }
     }, [detections]);
 
-    return { signedInStudents, markedDetections };
+    return { markedDetections };
 }
 
 export interface FaceDetectionsBoxProps {

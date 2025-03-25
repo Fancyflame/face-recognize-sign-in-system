@@ -10,6 +10,7 @@ import {
 import styles from "./index.module.less";
 import { IconArrowLeft, IconCamera } from "@douyinfe/semi-icons";
 import { IconButton } from "../components/iconButton";
+import CapturePage from "../CapturePage";
 
 type Data =
     | {
@@ -70,11 +71,11 @@ export function SignInPage() {
     }
 }
 
-interface LocalStudent {
+export interface LocalStudent {
     id: string;
     name: string;
     faceDescriptor: Float32Array;
-    isSignedIn: boolean;
+    // isSignedIn: boolean;
 }
 
 function LoadedPage({
@@ -84,69 +85,84 @@ function LoadedPage({
     summary: ClassroomSummary;
     students: Array<Student>;
 }) {
-    const [students, setStudents] = useState<Map<string, LocalStudent>>(
-        new Map(),
-    );
+    const [recordingMode, setRecordingMode] = useState(false);
+
+    const students = useMemo(() => {
+        return new Map(
+            studentsArray.map((stu) => [
+                stu.getId(),
+                {
+                    id: stu.getId(),
+                    name: stu.getName(),
+                    faceDescriptor: new Float32Array(
+                        stu.getFaceDescriptorList(),
+                    ),
+                },
+            ]),
+        );
+    }, [studentsArray]);
+
+    const [signedInList, setSignedInList] = useState<Set<string>>(new Set());
 
     useEffect(() => {
-        setStudents(
-            new Map(
-                studentsArray.map((stu) => [
-                    stu.getId(),
-                    {
-                        id: stu.getId(),
-                        name: stu.getName(),
-                        faceDescriptor: new Float32Array(
-                            stu.getFaceDescriptorList(),
-                        ),
-                        isSignedIn: false,
-                    },
-                ]),
-            ),
-        );
-    }, []);
+        setSignedInList(new Set());
+    }, [students]);
 
     const studentDisplay = useMemo(() => {
         return students
             .entries()
             .map(([id, stu]) => {
+                const isSignedIn = signedInList.has(id);
+
                 const className = [
                     styles.card,
-                    stu.isSignedIn ? styles.signedIn : "",
+                    isSignedIn ? styles.signedIn : "",
                 ].join(" ");
 
                 return (
                     <div className={className} key={id}>
-                        {stu.name +
-                            " - " +
-                            (stu.isSignedIn ? "已签到" : "未签到")}
+                        {stu.name + " - " + (isSignedIn ? "已签到" : "未签到")}
                     </div>
                 );
             })
             .toArray();
-    }, [students]);
+    }, [students, signedInList]);
 
-    return (
-        <div className={styles.container}>
-            <div className={styles.topHalf}>
-                <IconButton icon={<IconArrowLeft />} />
-                <div className={styles.infoPart}>
-                    <div className={styles.leftHalf}>
-                        <h1 className={styles.title}>{summary.getName()}</h1>
-                        <div className={styles.summaryTab}>
-                            <span>学生人数：{students.size}</span>
-                            <span>教室ID：{summary.getId()}</span>
+    if (recordingMode) {
+        return (
+            <CapturePage
+                students={students}
+                signedInList={signedInList}
+                setSignedInList={setSignedInList}
+                quit={() => setRecordingMode(false)}
+            />
+        );
+    } else {
+        return (
+            <div className={styles.container}>
+                <div className={styles.topHalf}>
+                    <IconButton icon={<IconArrowLeft />} />
+                    <div className={styles.infoPart}>
+                        <div className={styles.leftHalf}>
+                            <h1 className={styles.title}>
+                                {summary.getName()}
+                            </h1>
+                            <div className={styles.summaryTab}>
+                                <span>学生人数：{students.size}</span>
+                                <span>教室ID：{summary.getId()}</span>
+                            </div>
+                        </div>
+                        <div className={styles.rightHalf}>
+                            <IconButton
+                                icon={<IconCamera />}
+                                className={styles.recordBtn}
+                                onClick={() => setRecordingMode(true)}
+                            />
                         </div>
                     </div>
-                    <div className={styles.rightHalf}>
-                        <IconButton
-                            icon={<IconCamera />}
-                            className={styles.recordBtn}
-                        />
-                    </div>
                 </div>
+                <div className={styles.bottomHalf}>{studentDisplay}</div>
             </div>
-            <div className={styles.bottomHalf}>{studentDisplay}</div>
-        </div>
-    );
+        );
+    }
 }

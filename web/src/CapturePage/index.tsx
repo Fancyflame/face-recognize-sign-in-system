@@ -11,10 +11,18 @@ import { Student } from "../../generated/remote_signin_pb";
 import SignedStudent from "./SignedStudent";
 import { IconArrowLeft } from "@douyinfe/semi-icons";
 import { IconButton } from "../components/iconButton";
+import { LocalStudent } from "../SignInPage";
 
 type ModelLoadState = "loading" | "ok" | "error";
 
-export default function CapturePage() {
+export interface StudentsInfoProps {
+    students: Map<string, LocalStudent>;
+    signedInList: Set<string>;
+    setSignedInList: (list: Set<string>) => void;
+    quit: () => void;
+}
+
+export default function CapturePage(props: StudentsInfoProps) {
     const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
     const [recording, setRecording] = useState(false);
     const [detections, setDetections] = useState<DetectionResult[]>([]);
@@ -27,16 +35,17 @@ export default function CapturePage() {
 
     useCamera(videoEl);
     useEffect(() => {
-        loadModel("./models")
+        loadModel("../models")
             .then(() => {
                 setModelLoadState("ok");
             })
-            .catch(() => {
+            .catch((err) => {
+                console.error(err);
                 setModelLoadState("error");
             });
     }, []);
 
-    const { signedInStudents, markedDetections } = useMatchFace(detections);
+    const { markedDetections } = useMatchFace(detections, props);
 
     useEffect(() => {
         if (!recording) {
@@ -57,19 +66,19 @@ export default function CapturePage() {
     }, [recording]);
 
     const signedInStudentsDisplay = useMemo(() => {
-        return signedInStudents
+        return props.signedInList
             .values()
-            .map((student) => {
+            .map((stuId) => {
                 return (
                     <SignedStudent
-                        key={student.getId()}
-                        data={student}
+                        key={stuId}
+                        data={props.students.get(stuId)!}
                         signinMode="normal"
                     />
                 );
             })
             .toArray();
-    }, [signedInStudents]);
+    }, [props.signedInList]);
 
     const boxes = useMemo(() => {
         return videoEl ? (
@@ -96,6 +105,7 @@ export default function CapturePage() {
                     <IconButton
                         icon={<IconArrowLeft />}
                         className={styles.backBtn}
+                        onClick={props.quit}
                     />
                     <div className={styles.students}>
                         {signedInStudentsDisplay}

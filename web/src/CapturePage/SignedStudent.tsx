@@ -1,7 +1,7 @@
-import { Student } from "../../generated/remote_signin_pb";
+import { LocalStudent } from "../SignInPage";
 
 export interface SignedStudentProps {
-    data: Student;
+    data: LocalStudent;
     signinMode: "normal" | "external";
 }
 
@@ -20,7 +20,7 @@ export default function SignedStudent(props: SignedStudentProps) {
                 paddingLeft: 10,
             }}
         >
-            {props.data.getName()}
+            {props.data.name}
         </div>
     );
 }
