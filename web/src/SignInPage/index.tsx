@@ -11,6 +11,7 @@ import styles from "./index.module.less";
 import { IconArrowLeft, IconCamera } from "@douyinfe/semi-icons";
 import { IconButton } from "../components/iconButton";
 import CapturePage from "../CapturePage";
+import { RadioBtnBar, RadioButtonInfo } from "./radioBtnBar";
 
 type Data =
     | {
@@ -78,6 +79,23 @@ export interface LocalStudent {
     // isSignedIn: boolean;
 }
 
+type StudentDisplayMode = "all" | "unsigned" | "signed";
+
+const DISPLAY_STUDENTS_OPTIONS = [
+    {
+        displayText: "全部",
+        value: "all",
+    },
+    {
+        displayText: "未签到",
+        value: "unsigned",
+    },
+    {
+        displayText: "已签到",
+        value: "signed",
+    },
+];
+
 function LoadedPage({
     summary,
     students: studentsArray,
@@ -102,6 +120,8 @@ function LoadedPage({
         );
     }, [studentsArray]);
 
+    const [studentDisplayMode, setStudentDisplayMode] =
+        useState<StudentDisplayMode>("all");
     const [signedInList, setSignedInList] = useState<Set<string>>(new Set());
 
     useEffect(() => {
@@ -114,6 +134,13 @@ function LoadedPage({
             .map(([id, stu]) => {
                 const isSignedIn = signedInList.has(id);
 
+                if (
+                    (!isSignedIn && studentDisplayMode == "signed") ||
+                    (isSignedIn && studentDisplayMode == "unsigned")
+                ) {
+                    return null;
+                }
+
                 const className = [
                     styles.card,
                     isSignedIn ? styles.signedIn : "",
@@ -121,12 +148,14 @@ function LoadedPage({
 
                 return (
                     <div className={className} key={id}>
+                        <div className={styles.colorCircle}></div>
                         {stu.name + " - " + (isSignedIn ? "已签到" : "未签到")}
                     </div>
                 );
             })
+            .filter((e) => e !== null)
             .toArray();
-    }, [students, signedInList]);
+    }, [students, signedInList, studentDisplayMode]);
 
     if (recordingMode) {
         return (
@@ -137,32 +166,37 @@ function LoadedPage({
                 quit={() => setRecordingMode(false)}
             />
         );
-    } else {
-        return (
-            <div className={styles.container}>
-                <div className={styles.topHalf}>
-                    <IconButton icon={<IconArrowLeft />} />
-                    <div className={styles.infoPart}>
-                        <div className={styles.leftHalf}>
-                            <h1 className={styles.title}>
-                                {summary.getName()}
-                            </h1>
-                            <div className={styles.summaryTab}>
-                                <span>学生人数：{students.size}</span>
-                                <span>教室ID：{summary.getId()}</span>
-                            </div>
-                        </div>
-                        <div className={styles.rightHalf}>
-                            <IconButton
-                                icon={<IconCamera />}
-                                className={styles.recordBtn}
-                                onClick={() => setRecordingMode(true)}
-                            />
+    }
+
+    return (
+        <div className={styles.container}>
+            <div className={styles.topHalf}>
+                <IconButton icon={<IconArrowLeft />} />
+                <div className={styles.infoPart}>
+                    <div className={styles.leftHalf}>
+                        <h1 className={styles.title}>{summary.getName()}</h1>
+                        <div className={styles.summaryTab}>
+                            <span>学生人数：{students.size}</span>
+                            <span>教室ID：{summary.getId()}</span>
                         </div>
                     </div>
+                    <div className={styles.rightHalf}>
+                        <IconButton
+                            icon={<IconCamera />}
+                            className={styles.recordBtn}
+                            onClick={() => setRecordingMode(true)}
+                        />
+                    </div>
                 </div>
-                <div className={styles.bottomHalf}>{studentDisplay}</div>
+                <RadioBtnBar
+                    className={styles.displayStuOptions}
+                    options={DISPLAY_STUDENTS_OPTIONS}
+                    onSelect={(value) =>
+                        setStudentDisplayMode(value as StudentDisplayMode)
+                    }
+                />
             </div>
-        );
-    }
+            <div className={styles.bottomHalf}>{studentDisplay}</div>
+        </div>
+    );
 }

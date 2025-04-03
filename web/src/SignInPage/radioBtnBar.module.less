@@ -1,0 +1,22 @@
+.bar {
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    gap: 5px;
+    min-width: 300px;
+
+    .btn {
+        height: 100%;
+        flex: 1 1 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 3px;
+
+        &.selected {
+            background-color: #2ecc71;
+            color: white;
+            font-weight: bold;
+        }
+    }
+}
