@@ -4,11 +4,22 @@ use classroom::{
 };
 use tonic::{Request, Response, Status};
 
+use crate::database::{self, Db};
+
 pub mod classroom {
     tonic::include_proto!("remote_signin");
 }
 
-pub struct ClassroomCore;
+pub struct ClassroomCore {
+    db: Db,
+}
+
+impl ClassroomCore {
+    pub async fn new() -> anyhow::Result<Self> {
+        let db = Db::new("sqlite:./test.db").await?;
+        Ok(Self { db })
+    }
+}
 
 #[tonic::async_trait]
 impl Classroom for ClassroomCore {
@@ -24,11 +35,13 @@ impl Classroom for ClassroomCore {
                     name: "测试教室".into(),
                     student_count: 1,
                 }),
-                students: vec![Student {
-                    id: "me.id".into(),
-                    name: "me.name".into(),
-                    face_descriptor: ME_DESCRIPTOR.iter().copied().collect(),
-                }],
+                students: vec![cast_db_stu_to_rpc_stu(
+                    self.db
+                        .get_student_by_id("me.id")
+                        .await
+                        .map_err(|e| Status::unknown(e.to_string()))?
+                        .unwrap(),
+                )],
             })),
         });
 
@@ -48,6 +61,20 @@ impl Classroom for ClassroomCore {
                 }],
             })),
         }))
+    }
+}
+
+fn cast_db_stu_to_rpc_stu(
+    database::Student {
+        id,
+        name,
+        face_descriptor,
+    }: database::Student,
+) -> Student {
+    Student {
+        id,
+        name,
+        face_descriptor,
     }
 }
 
