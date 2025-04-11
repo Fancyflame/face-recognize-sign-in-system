@@ -38,7 +38,7 @@ export function SignInPage() {
     useEffect(() => {
         const detailsReq = new GetDetailsReq();
         detailsReq.setClassroomId(roomId);
-        client.getDetails(new GetDetailsReq(), null, (err, res) => {
+        client.getDetails(detailsReq, null, (err, res) => {
             if (err) {
                 setData({ status: "error" });
             }

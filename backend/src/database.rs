@@ -14,6 +14,13 @@ pub struct Student {
     pub face_descriptor: Vec<f32>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Classroom {
+    pub id: String,
+    pub name: String,
+    pub students: Vec<String>, // 存储学生ID列表
+}
+
 impl Db {
     /// 初始化数据库连接并自动创建表（如果不存在）
     pub async fn new(db_path: &str) -> Result<Self> {
@@ -49,9 +56,20 @@ impl Db {
         .await?;
 
         let this = Db { pool };
-        this.upsert_student(&test_data()).await?;
+        // this.init_test_data().await?;
 
         Ok(this)
+    }
+
+    async fn init_test_data(&self) -> Result<()> {
+        self.upsert_student(&test_student_data()).await?;
+        self.insert_classroom(&Classroom {
+            id: "114514".into(),
+            name: "测试教室名称".into(),
+            students: vec!["me.id".into()],
+        })
+        .await?;
+        Ok(())
     }
 
     // 通过学生 ID 查询学生信息
@@ -101,6 +119,10 @@ impl Db {
             face_descriptor: face_desc_f32,
         } = student;
 
+        if id.contains(',') {
+            return Err(anyhow!("学生id不可包含逗号"));
+        }
+
         let face_descriptor = cast_slice(face_desc_f32);
         let exists = self.student_exists(&id).await?;
 
@@ -122,9 +144,39 @@ impl Db {
 
         Ok(())
     }
+
+    pub async fn insert_classroom(
+        &self,
+        Classroom { id, name, students }: &Classroom,
+    ) -> Result<()> {
+        let students_string = students.join(",");
+
+        sqlx::query("INSERT INTO classrooms (id, name, students) VALUES (?, ?, ?)")
+            .bind(id)
+            .bind(name)
+            .bind(students_string)
+            .execute(&self.pool)
+            .await?;
+        Ok(())
+    }
+
+    pub async fn get_classroom_by_id(&self, id: &str) -> Result<Option<Classroom>> {
+        let row = sqlx::query("SELECT id, name, students FROM classrooms WHERE id = ?")
+            .bind(id)
+            .fetch_optional(&self.pool)
+            .await?;
+
+        let Some(row) = row else { return Ok(None) };
+        let id: String = row.get("id");
+        let name: String = row.get("name");
+        let students_str: String = row.get("students");
+        let students: Vec<String> = students_str.split(",").map(str::to_string).collect();
+
+        Ok(Some(Classroom { id, name, students }))
+    }
 }
 
-fn test_data() -> Student {
+fn test_student_data() -> Student {
     Student {
         id: "me.id".into(),
         name: "另外的名字".into(),
