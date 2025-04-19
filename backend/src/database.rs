@@ -1,24 +1,24 @@
 use anyhow::{Result, anyhow};
 use bytemuck::{cast_slice, try_cast_slice};
 use serde::{Deserialize, Serialize};
-use sqlx::{Row, SqlitePool, sqlite::SqlitePoolOptions};
+use sqlx::{Row, SqlitePool, prelude::FromRow, sqlite::SqlitePoolOptions};
 
 pub struct Db {
     pool: SqlitePool,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Student {
+pub struct Student<FaceDescriptor = Vec<f32>> {
     pub id: String,
     pub name: String,
-    pub face_descriptor: Vec<f32>,
+    pub face_descriptor: FaceDescriptor,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Classroom {
+#[derive(FromRow)]
+pub struct Classroom<Students = Vec<String>> {
     pub id: String,
     pub name: String,
-    pub students: Vec<String>, // 存储学生ID列表
+    pub students: Students, // 逗号分隔的学生ID列表
 }
 
 impl Db {
@@ -161,19 +161,41 @@ impl Db {
     }
 
     pub async fn get_classroom_by_id(&self, id: &str) -> Result<Option<Classroom>> {
-        let row = sqlx::query("SELECT id, name, students FROM classrooms WHERE id = ?")
-            .bind(id)
-            .fetch_optional(&self.pool)
-            .await?;
+        let row: Option<Classroom<String>> =
+            sqlx::query_as("SELECT id, name, students FROM classrooms WHERE id = ?")
+                .bind(id)
+                .fetch_optional(&self.pool)
+                .await?;
 
         let Some(row) = row else { return Ok(None) };
-        let id: String = row.get("id");
-        let name: String = row.get("name");
-        let students_str: String = row.get("students");
-        let students: Vec<String> = students_str.split(",").map(str::to_string).collect();
+        let Classroom { id, name, students } = row;
 
-        Ok(Some(Classroom { id, name, students }))
+        Ok(Some(Classroom {
+            id,
+            name,
+            students: parse_students(&students),
+        }))
     }
+
+    pub async fn get_all_classrooms(&self) -> Result<Vec<Classroom>> {
+        let vec: Vec<Classroom<String>> =
+            sqlx::query_as("SELECT id, name, students FROM classrooms")
+                .fetch_all(&self.pool)
+                .await?;
+
+        Ok(vec
+            .into_iter()
+            .map(|classroom| Classroom {
+                id: classroom.id,
+                name: classroom.name,
+                students: parse_students(&classroom.students),
+            })
+            .collect())
+    }
+}
+
+fn parse_students(s: &str) -> Vec<String> {
+    s.split(",").map(str::to_string).collect()
 }
 
 fn test_student_data() -> Student {

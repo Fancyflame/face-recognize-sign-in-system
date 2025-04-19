@@ -22,7 +22,7 @@ root.render(
             <Router>
                 <Routes>
                     <Route path="/" element={<ClassroomPage />} />
-                    <Route path="/record" element={<CapturePage />} />
+                    {/* <Route path="/record" element={<CapturePage />} /> */}
                     <Route path="/classroom/:roomId" element={<SignInPage />} />
                     <Route
                         path="/classroom"

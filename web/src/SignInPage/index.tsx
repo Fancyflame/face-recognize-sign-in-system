@@ -104,6 +104,7 @@ function LoadedPage({
     students: Array<Student>;
 }) {
     const [recordingMode, setRecordingMode] = useState(false);
+    const navigate = useNavigate();
 
     const students = useMemo(() => {
         return new Map(
@@ -171,7 +172,12 @@ function LoadedPage({
     return (
         <div className={styles.container}>
             <div className={styles.topHalf}>
-                <IconButton icon={<IconArrowLeft />} />
+                <IconButton
+                    icon={<IconArrowLeft />}
+                    onClick={() => {
+                        navigate("/");
+                    }}
+                />
                 <div className={styles.infoPart}>
                     <div className={styles.leftHalf}>
                         <h1 className={styles.title}>{summary.getName()}</h1>

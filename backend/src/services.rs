@@ -71,15 +71,30 @@ impl Classroom for ClassroomCore {
 
     async fn list(
         &self,
-        req: Request<ListClassroomReq>,
+        _req: Request<ListClassroomReq>,
     ) -> Result<Response<ListClassroomRes>, Status> {
+        let classrooms = self
+            .db
+            .get_all_classrooms()
+            .await
+            .map_err(anyhow_to_status)?;
+
+        let casted = classrooms
+            .into_iter()
+            .map(
+                |database::Classroom { id, name, students }: database::Classroom| {
+                    ClassroomSummary {
+                        id,
+                        name,
+                        student_count: students.len() as _,
+                    }
+                },
+            )
+            .collect();
+
         Ok(Response::new(ListClassroomRes {
             response: Some(list_classroom_res::Response::Ok(list_classroom_res::Data {
-                classrooms: vec![ClassroomSummary {
-                    id: "test".into(),
-                    name: "测试教室".into(),
-                    student_count: 1,
-                }],
+                classrooms: casted,
             })),
         }))
     }
