@@ -1,19 +1,24 @@
 import { CSSProperties, JSX } from "react";
 import styles from "./iconButton.module.less";
 
-export interface IconButtonProps {
-    icon: JSX.Element;
+export interface IconButtonProps
+    extends React.HTMLAttributes<HTMLButtonElement> {
+    icon?: JSX.Element;
+    text?: string;
 }
 
-export function IconButton(
-    props: IconButtonProps & React.HTMLAttributes<HTMLButtonElement>,
-) {
+export function IconButton(props: IconButtonProps) {
     const className = `${styles.iconButton} ${props.className || ""}`;
-    const { icon } = props;
+    const htmlAttrs = {
+        ...props,
+        icon: undefined,
+        text: undefined,
+    };
 
     return (
-        <button {...props} className={className}>
+        <button {...htmlAttrs} className={className}>
             {props.icon}
+            {props.text ? <span>{props.text}</span> : null}
         </button>
     );
 }

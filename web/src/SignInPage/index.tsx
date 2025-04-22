@@ -174,6 +174,10 @@ function LoadedPage({
             <div className={styles.topHalf}>
                 <IconButton
                     icon={<IconArrowLeft />}
+                    style={{
+                        aspectRatio: 1,
+                        width: "min-content",
+                    }}
                     onClick={() => {
                         navigate("/");
                     }}

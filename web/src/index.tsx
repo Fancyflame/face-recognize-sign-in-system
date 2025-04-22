@@ -12,6 +12,7 @@ import CapturePage from "./CapturePage/index";
 import { ClassroomPage } from "./ClassroomPage";
 import { ClassroomClientProvider } from "./classroomClient";
 import { SignInPage } from "./SignInPage";
+import { CreateStudentPage } from "./CreateStudentPage";
 
 const root = createRoot(document.body);
 const serviceLocation = `http://${window.location.hostname}:10000`;
@@ -23,6 +24,10 @@ root.render(
                 <Routes>
                     <Route path="/" element={<ClassroomPage />} />
                     {/* <Route path="/record" element={<CapturePage />} /> */}
+                    <Route
+                        path="/createStudent"
+                        element={<CreateStudentPage />}
+                    />
                     <Route path="/classroom/:roomId" element={<SignInPage />} />
                     <Route
                         path="/classroom"

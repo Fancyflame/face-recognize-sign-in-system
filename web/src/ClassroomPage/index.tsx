@@ -1,4 +1,8 @@
-import { IconChevronLeft, IconUserGroup } from "@douyinfe/semi-icons";
+import {
+    IconChevronLeft,
+    IconPlusCircle,
+    IconUserGroup,
+} from "@douyinfe/semi-icons";
 import styles from "./index.module.less";
 import { useEffect, useMemo, useState } from "react";
 import { useClassroomClient } from "../classroomClient";
@@ -7,12 +11,14 @@ import {
     ListClassroomReq,
 } from "../../generated/remote_signin_pb";
 import { useNavigate } from "react-router-dom";
+import { IconButton } from "../components/iconButton";
 
 export function ClassroomPage() {
     const client = useClassroomClient();
     const [classrooomList, setClassroomList] = useState(
         new Array<ClassroomSummary>(),
     );
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetch = async () => {
@@ -35,8 +41,14 @@ export function ClassroomPage() {
         <div className={styles.container}>
             <div className={styles.insideContainer}>
                 <div className={styles.title}>
-                    <IconChevronLeft />
-                    教室列表
+                    <div>教室列表</div>
+                    <IconButton
+                        icon={<IconPlusCircle />}
+                        text="录入学生"
+                        onClick={() => {
+                            navigate("/createStudent");
+                        }}
+                    />
                 </div>
                 <div className={styles.classroomList}>
                     {classroomListDisplay}
