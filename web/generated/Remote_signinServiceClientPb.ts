@@ -125,5 +125,48 @@ export class ClassroomClient {
     this.methodDescriptorGetDetails);
   }
 
+  methodDescriptorUpdateStudent = new grpcWeb.MethodDescriptor(
+    '/remote_signin.Classroom/UpdateStudent',
+    grpcWeb.MethodType.UNARY,
+    remote_signin_pb.UpdateStudentReq,
+    remote_signin_pb.UpdateStudentRes,
+    (request: remote_signin_pb.UpdateStudentReq) => {
+      return request.serializeBinary();
+    },
+    remote_signin_pb.UpdateStudentRes.deserializeBinary
+  );
+
+  updateStudent(
+    request: remote_signin_pb.UpdateStudentReq,
+    metadata?: grpcWeb.Metadata | null): Promise<remote_signin_pb.UpdateStudentRes>;
+
+  updateStudent(
+    request: remote_signin_pb.UpdateStudentReq,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: remote_signin_pb.UpdateStudentRes) => void): grpcWeb.ClientReadableStream<remote_signin_pb.UpdateStudentRes>;
+
+  updateStudent(
+    request: remote_signin_pb.UpdateStudentReq,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: remote_signin_pb.UpdateStudentRes) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/remote_signin.Classroom/UpdateStudent',
+        request,
+        metadata || {},
+        this.methodDescriptorUpdateStudent,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/remote_signin.Classroom/UpdateStudent',
+    request,
+    metadata || {},
+    this.methodDescriptorUpdateStudent);
+  }
+
 }
 

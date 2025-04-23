@@ -1,6 +1,7 @@
 use classroom::{
     ClassroomSummary, GetDetailsReq, GetDetailsRes, ListClassroomReq, ListClassroomRes, Student,
-    classroom_server::Classroom, get_details_res, list_classroom_res,
+    UpdateStudentReq, UpdateStudentRes, classroom_server::Classroom, get_details_res,
+    list_classroom_res,
 };
 use tonic::{Request, Response, Status};
 
@@ -20,6 +21,8 @@ impl ClassroomCore {
         Ok(Self { db })
     }
 }
+
+impl ClassroomCore {}
 
 #[tonic::async_trait]
 impl Classroom for ClassroomCore {
@@ -97,6 +100,26 @@ impl Classroom for ClassroomCore {
                 classrooms: casted,
             })),
         }))
+    }
+
+    async fn update_student(
+        &self,
+        req: Request<UpdateStudentReq>,
+    ) -> Result<Response<UpdateStudentRes>, Status> {
+        let Some(student) = &req.get_ref().student else {
+            return Err(Status::invalid_argument("学生信息必须提供"));
+        };
+
+        self.db
+            .upsert_student(&database::Student {
+                id: student.id.clone(),
+                name: student.name.clone(),
+                face_descriptor: student.face_descriptor.clone(),
+            })
+            .await
+            .map_err(anyhow_to_status)?;
+
+        Ok(Response::new(UpdateStudentRes::default()))
     }
 }
 

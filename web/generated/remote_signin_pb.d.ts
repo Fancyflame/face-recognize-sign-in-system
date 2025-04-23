@@ -176,6 +176,75 @@ export namespace GetDetailsRes {
   }
 }
 
+export class UpdateStudentReq extends jspb.Message {
+  getStudent(): Student | undefined;
+  setStudent(value?: Student): UpdateStudentReq;
+  hasStudent(): boolean;
+  clearStudent(): UpdateStudentReq;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UpdateStudentReq.AsObject;
+  static toObject(includeInstance: boolean, msg: UpdateStudentReq): UpdateStudentReq.AsObject;
+  static serializeBinaryToWriter(message: UpdateStudentReq, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UpdateStudentReq;
+  static deserializeBinaryFromReader(message: UpdateStudentReq, reader: jspb.BinaryReader): UpdateStudentReq;
+}
+
+export namespace UpdateStudentReq {
+  export type AsObject = {
+    student?: Student.AsObject,
+  }
+}
+
+export class UpdateStudentRes extends jspb.Message {
+  getOk(): UpdateStudentRes.Data | undefined;
+  setOk(value?: UpdateStudentRes.Data): UpdateStudentRes;
+  hasOk(): boolean;
+  clearOk(): UpdateStudentRes;
+
+  getErr(): Error | undefined;
+  setErr(value?: Error): UpdateStudentRes;
+  hasErr(): boolean;
+  clearErr(): UpdateStudentRes;
+
+  getResponseCase(): UpdateStudentRes.ResponseCase;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UpdateStudentRes.AsObject;
+  static toObject(includeInstance: boolean, msg: UpdateStudentRes): UpdateStudentRes.AsObject;
+  static serializeBinaryToWriter(message: UpdateStudentRes, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UpdateStudentRes;
+  static deserializeBinaryFromReader(message: UpdateStudentRes, reader: jspb.BinaryReader): UpdateStudentRes;
+}
+
+export namespace UpdateStudentRes {
+  export type AsObject = {
+    ok?: UpdateStudentRes.Data.AsObject,
+    err?: Error.AsObject,
+  }
+
+  export class Data extends jspb.Message {
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): Data.AsObject;
+    static toObject(includeInstance: boolean, msg: Data): Data.AsObject;
+    static serializeBinaryToWriter(message: Data, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): Data;
+    static deserializeBinaryFromReader(message: Data, reader: jspb.BinaryReader): Data;
+  }
+
+  export namespace Data {
+    export type AsObject = {
+    }
+  }
+
+
+  export enum ResponseCase { 
+    RESPONSE_NOT_SET = 0,
+    OK = 1,
+    ERR = 2,
+  }
+}
+
 export class Student extends jspb.Message {
   getId(): string;
   setId(value: string): Student;

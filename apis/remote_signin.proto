@@ -4,6 +4,7 @@ package remote_signin;
 service Classroom {
     rpc List(ListClassroomReq) returns (ListClassroomRes);
     rpc GetDetails(GetDetailsReq) returns (GetDetailsRes);
+    rpc UpdateStudent(UpdateStudentReq) returns (UpdateStudentRes);
 }
 
 message ListClassroomReq {}
@@ -39,6 +40,19 @@ message GetDetailsRes {
         ClassroomSummary info = 1;
         repeated Student students = 2;
     }
+}
+
+message UpdateStudentReq {
+    Student student = 1;
+}
+
+message UpdateStudentRes {
+    oneof response {
+        Data ok = 1;
+        Error err = 2;
+    }
+
+    message Data {}
 }
 
 message Student {
