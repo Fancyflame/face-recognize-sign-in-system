@@ -1,3 +1,5 @@
+@import "../consts.less";
+
 .container {
     width: 100%;
     height: 100%;
@@ -6,12 +8,9 @@
     align-items: stretch;
     flex-direction: column;
 
-    --theme-green: #2ecc71;
-    --theme-red: #e74c3c;
-
     .title,
     .green-left {
-        border-left: 6px solid var(--theme-green);
+        border-left: 6px solid @theme-green;
         padding-left: 20px;
         border-top-left-radius: 0px;
         border-bottom-left-radius: 0px;
@@ -70,7 +69,7 @@
                     width: 70px;
                     height: 70px;
                     border-radius: 20%;
-                    background: var(--theme-red);
+                    background: @theme-red;
                     color: white;
                 }
             }
@@ -106,11 +105,11 @@
                 width: 15px;
                 height: 15px;
                 border-radius: 9999px;
-                background-color: var(--theme-red);
+                background-color: @theme-red;
             }
 
             &.signedIn .color-circle {
-                background-color: var(--theme-green);
+                background-color: @theme-green;
             }
         }
     }

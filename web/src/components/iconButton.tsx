@@ -1,8 +1,8 @@
-import { CSSProperties, JSX } from "react";
+import { JSX } from "react";
 import styles from "./iconButton.module.less";
 
 export interface IconButtonProps
-    extends React.HTMLAttributes<HTMLButtonElement> {
+    extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     icon?: JSX.Element;
     text?: string;
 }
