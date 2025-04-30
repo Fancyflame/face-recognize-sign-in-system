@@ -3,17 +3,18 @@ import styles from "./index.module.less";
 import {
     DetectionResult,
     FaceDetectionsBox,
-    loadModel,
-    runModel,
     useMatchFace,
 } from "./faceRecognition";
+import {
+    runModel,
+    useGetModelLoadState,
+    LoadState as ModelLoadState,
+} from "../faceApiLocal";
 import { Student } from "../../generated/remote_signin_pb";
 import SignedStudent from "./SignedStudent";
 import { IconArrowLeft } from "@douyinfe/semi-icons";
 import { IconButton } from "../components/iconButton";
 import { LocalStudent } from "../SignInPage";
-
-type ModelLoadState = "loading" | "ok" | "error";
 
 export interface StudentsInfoProps {
     students: Map<string, LocalStudent>;
@@ -26,24 +27,13 @@ export default function CapturePage(props: StudentsInfoProps) {
     const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
     const [recording, setRecording] = useState(false);
     const [detections, setDetections] = useState<DetectionResult[]>([]);
-    const [modelLoadState, setModelLoadState] =
-        useState<ModelLoadState>("loading");
 
     if (!recording && detections.length) {
         setDetections([]);
     }
 
     useCamera(videoEl);
-    useEffect(() => {
-        loadModel("../models")
-            .then(() => {
-                setModelLoadState("ok");
-            })
-            .catch((err) => {
-                console.error(err);
-                setModelLoadState("error");
-            });
-    }, []);
+    const modelLoadState = useGetModelLoadState();
 
     const { markedDetections } = useMatchFace(detections, props);
 
@@ -89,7 +79,7 @@ export default function CapturePage(props: StudentsInfoProps) {
     const recordButtonClass = useMemo(() => {
         if (recording) {
             return styles.recording;
-        } else if (modelLoadState !== "ok") {
+        } else if (modelLoadState === ModelLoadState.Loading) {
             return styles.inLoading;
         } else {
             return "";
@@ -113,7 +103,7 @@ export default function CapturePage(props: StudentsInfoProps) {
                 </div>
 
                 <button
-                    disabled={modelLoadState !== "ok"}
+                    disabled={modelLoadState !== ModelLoadState.Loaded}
                     onClick={() => setRecording(!recording)}
                     className={`${styles.startBtn} ${recordButtonClass}`}
                 ></button>

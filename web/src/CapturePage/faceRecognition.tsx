@@ -1,9 +1,9 @@
-import * as faceapi from "face-api.js";
 import * as testDescriptors from "./testDescriptors";
 import { useFaceDescDb } from "./faceDescriptorDb";
 import { Student } from "../../generated/remote_signin_pb";
 import { useEffect, useState } from "react";
 import { StudentsInfoProps } from ".";
+import { runModel } from "../faceApiLocal";
 
 // 获得face api识别返回值的单个检测结果类型
 export type DetectionResult = Awaited<
@@ -11,22 +11,6 @@ export type DetectionResult = Awaited<
 > extends Array<infer E>
     ? E
     : never;
-
-export async function loadModel(pathDir: string) {
-    // await faceapi.loadMtcnnModel(pathDir);
-    await faceapi.loadSsdMobilenetv1Model(pathDir);
-    await faceapi.loadFaceDetectionModel(pathDir);
-    await faceapi.loadFaceLandmarkModel(pathDir);
-    await faceapi.loadFaceRecognitionModel(pathDir);
-    console.log("模型已加载");
-}
-
-export async function runModel(video: HTMLVideoElement) {
-    return await faceapi
-        .detectAllFaces(video, new faceapi.SsdMobilenetv1Options())
-        .withFaceLandmarks(false)
-        .withFaceDescriptors();
-}
 
 const COLOR_RECOGNIZED = "#54fe9b";
 const COLOR_UNRECOGNIZED = "#e84118";

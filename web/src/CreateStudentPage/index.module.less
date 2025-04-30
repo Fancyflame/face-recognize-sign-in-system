@@ -28,6 +28,12 @@
         }
     }
 
+    .upload-img-hint {
+        --color-progress: grey;
+        --color-error: @theme-red;
+        --color-ok: @theme-green;
+    }
+
     .upload-img-btn {
         background-color: @theme-green;
         color: white;
@@ -65,10 +71,11 @@
         border: none;
         background-color: @theme-green;
         color: white;
+    }
 
-        &:disabled {
-            background-color: @input-bg-grey;
-            color: #999;
-        }
+    .upload-img-btn:disabled,
+    .submit:disabled {
+        background-color: @input-bg-grey;
+        color: #999;
     }
 }
