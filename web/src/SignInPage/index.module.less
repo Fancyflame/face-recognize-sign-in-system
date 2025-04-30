@@ -90,16 +90,21 @@
         overflow-y: scroll;
 
         .card {
-            width: 100%;
+            width: calc(100% - 10px);
             height: 40px;
-            box-sizing: border-box;
             color: black;
             font-weight: lighter;
             font-size: 25px;
+            border-bottom: 2px solid @input-bg-grey;
+            padding: 5px 5px;
 
             display: flex;
             align-items: center;
             gap: 20px;
+
+            &:last-child {
+                border-bottom: none;
+            }
 
             .color-circle {
                 width: 15px;

@@ -1,12 +1,8 @@
-import { FaceMatch, FaceMatcher, LabeledFaceDescriptors } from "face-api.js";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { ClassroomClient } from "../../generated/Remote_signinServiceClientPb";
-import { GetDetailsReq, Student } from "../../generated/remote_signin_pb";
-import { useClassroomClient } from "../classroomClient";
+import { FaceMatcher, LabeledFaceDescriptors } from "face-api.js";
+import { useMemo } from "react";
 import { LocalStudent } from "../SignInPage";
 
-const THRESHOLD = 0.5;
-const REMOTE_DB_ADDR = "http://localhost:10000";
+const THRESHOLD = 0.3;
 
 export interface FaceDescDb {
     matchFace(desciptor: Float32Array): LocalStudent | undefined;

@@ -17,7 +17,7 @@ pub struct ClassroomCore {
 
 impl ClassroomCore {
     pub async fn new() -> anyhow::Result<Self> {
-        let db = Db::new("sqlite:./test.db").await?;
+        let db = Db::new("sqlite:./test.sqlite").await?;
         Ok(Self { db })
     }
 }

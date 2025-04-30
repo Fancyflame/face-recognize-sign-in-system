@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Student } from "../../generated/remote_signin_pb";
+import { Student, UpdateStudentReq } from "../../generated/remote_signin_pb";
 import { LabeledField } from "./LabeledField";
 import styles from "./index.module.less";
 import { IconButton } from "../components/iconButton";
@@ -28,6 +28,7 @@ export function CreateStudentPage() {
     const crClient = useClassroomClient();
     const [file, setFile] = useState<File | null>(null);
     const inputFile = useRef<HTMLInputElement | null>(null);
+    const [submiting, setSubmiting] = useState(false);
 
     const {
         faceDescriptor,
@@ -36,6 +37,14 @@ export function CreateStudentPage() {
     } = useUploadAndRecognizeFace(file);
 
     const modelLoadState = useGetModelLoadState();
+
+    const canSubmit = Boolean(
+        !submiting &&
+            faceDescriptor &&
+            data.id &&
+            data.name &&
+            recState === RecognizeState.Done,
+    );
 
     const callbacks = useMemo(
         () => ({
@@ -50,17 +59,24 @@ export function CreateStudentPage() {
                 if (!file) return;
                 setFile(file);
             },
-            submit() {},
         }),
         [],
     );
 
-    const canSubmit = Boolean(
-        faceDescriptor &&
-            data.id &&
-            data.name &&
-            recState === RecognizeState.Done,
-    );
+    const submitFn = async () => {
+        if (!canSubmit) return;
+        setSubmiting(true);
+        const req = new UpdateStudentReq();
+        const student = new Student();
+        student.setId(data.id!);
+        student.setName(data.name!);
+        student.setFaceDescriptorList(Array.from(faceDescriptor!));
+        req.setStudent(student);
+        await crClient.updateStudent(req);
+        setSubmiting(false);
+        alert("提交成功");
+        navigate("/");
+    };
 
     const canUploadImage = Boolean(
         modelLoadState === ModelLoadState.Loaded &&
@@ -124,7 +140,7 @@ export function CreateStudentPage() {
                 <input type="text" onChange={makeCallback("name")} />
             </LabeledField>
             <IconButton
-                onClick={callbacks.submit}
+                onClick={submitFn}
                 className={styles.submit}
                 disabled={!canSubmit}
                 text="创建"
