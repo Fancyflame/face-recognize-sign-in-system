@@ -32,6 +32,13 @@ export default function CapturePage(props: StudentsInfoProps) {
         setDetections([]);
     }
 
+    useEffect(() => {
+        document.documentElement.requestFullscreen();
+        return () => {
+            document.exitFullscreen();
+        };
+    }, []);
+
     useCamera(videoEl);
     const modelLoadState = useGetModelLoadState();
 

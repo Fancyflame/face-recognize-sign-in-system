@@ -150,7 +150,11 @@ function LoadedPage({
                 return (
                     <div className={className} key={id}>
                         <div className={styles.colorCircle}></div>
-                        {stu.name + " - " + (isSignedIn ? "已签到" : "未签到")}
+                        <div className={styles.studentName}>
+                            {stu.name +
+                                " - " +
+                                (isSignedIn ? "已签到" : "未签到")}
+                        </div>
                     </div>
                 );
             })

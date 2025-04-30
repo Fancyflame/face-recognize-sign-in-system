@@ -3,6 +3,7 @@
 .container {
     width: 100%;
     height: 100%;
+    box-sizing: border-box;
     display: flex;
     justify-content: stretch;
     align-items: stretch;
@@ -18,6 +19,8 @@
 
     .top-half {
         flex: 0 0 auto;
+        width: 100%;
+        box-sizing: border-box;
         height: 40vh;
         min-height: 290px;
         box-shadow: 0px 0px 16px 0px #aaa;
@@ -30,12 +33,15 @@
         gap: 10px;
 
         .info-part {
+            width: 100%;
             display: flex;
             justify-content: stretch;
             align-items: center;
 
             .left-half {
                 flex: 1 1 auto;
+                overflow-x: auto;
+                width: 1px;
                 height: 100%;
                 display: flex;
                 flex-direction: column;
@@ -48,7 +54,7 @@
 
                 .title {
                     &:extend(.green-left);
-                    font-size: 50px;
+                    font-size: 40px;
                     margin-bottom: 15px;
                 }
 
@@ -57,7 +63,7 @@
                     flex-direction: column;
                     color: #555;
                     gap: 4px;
-                    font-size: 20px;
+                    font-size: 15px;
                 }
             }
 
@@ -97,6 +103,7 @@
             font-size: 25px;
             border-bottom: 2px solid @input-bg-grey;
             padding: 5px 5px;
+            white-space: nowrap;
 
             display: flex;
             align-items: center;
@@ -107,10 +114,16 @@
             }
 
             .color-circle {
+                flex-shrink: 0;
                 width: 15px;
                 height: 15px;
                 border-radius: 9999px;
                 background-color: @theme-red;
+            }
+
+            .student-name {
+                overflow-x: auto;
+                overflow-y: hidden;
             }
 
             &.signedIn .color-circle {
