@@ -25,7 +25,7 @@
 
 - 需要[安装Rust](https://www.rust-lang.org/tools/install)。因为暂时没有提供预编译程序，因此需要自己编译。
 - 需要[安装nodejs](https://nodejs.org/)。
-- 需要[安装protoc](https://github.com/protocolbuffers/protobuf/release)，并放在`PATH`环境变量中。
+- 需要[安装protoc](https://github.com/protocolbuffers/protobuf/releases)，并放在`PATH`环境变量中。
 
 ## Usage
 
